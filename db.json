@@ -1,0 +1,36 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "name": "Guilherme Frizzera Meira",
+      "groups": [
+        {
+          "id": 1,
+          "name": "Usuario",
+          "permissions": [
+            { "id": 1, "path": "/" },
+            { "id": 2, "path": "/dashboard" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Eduardo Frizzera Meira",
+      "groups": [
+        {
+          "id": 2,
+          "name": "administrador",
+          "permissions": [
+            { "id": 1, "path": "/" },
+            { "id": 2, "path": "/dashboard" },
+            { "id": 3, "path": "/administrativo/grupos" },
+            { "id": 4, "path": "/administrativo/usuarios" },
+            { "id": 5, "path": "/administrativo/permissoes" },
+            { "id": 6, "path": "/administrativo/controle/versao" }
+          ]
+        }
+      ]
+    }
+  ]
+}
