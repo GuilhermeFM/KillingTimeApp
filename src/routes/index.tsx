@@ -18,7 +18,11 @@ export const Routes: React.FC = () => (
     <Route path="/administrativo/grupos" component={Grupos} isPrivate />
     <Route path="/administrativo/usuarios" component={Usuarios} isPrivate />
     <Route path="/administrativo/permissoes" component={Permissoes} isPrivate />
-    <Route path="/administrativo/controle/versao" component={ControleVersao} isPrivate />
+    <Route
+      path="/administrativo/controle/versao"
+      component={ControleVersao}
+      isPrivate
+    />
 
     <Route path="/Error" component={Error} />
   </Switch>

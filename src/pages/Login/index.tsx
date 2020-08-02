@@ -1,20 +1,46 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
+
+import { useAuth } from '../../hooks/auth';
 
 import Checkbox from '../../Components/Checkbox';
-
 import facebook from '../../assets/facebook-logo.svg';
 import google from '../../assets/google-logo.svg';
 
 import { Container, Background } from './styles';
 
 const Login: React.FC = () => {
+  const { signIn } = useAuth();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = useCallback(
+    (e: React.BaseSyntheticEvent) => {
+      e.preventDefault();
+
+      signIn(username);
+    },
+    [signIn, username],
+  );
+
   return (
     <Container>
       <form>
         <h1>Welcome back</h1>
         <h4>Start the adventure</h4>
-        <input type="text" placeholder="Username or email" />
-        <input type="text" placeholder="Password" />
+        <input
+          type="text"
+          placeholder="Username or email"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button type="submit" onClick={handleSubmit}>
+          Login
+        </button>
 
         <div>
           <Checkbox>Remember me</Checkbox>

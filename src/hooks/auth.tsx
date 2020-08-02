@@ -61,5 +61,9 @@ export const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem('@Gobarber:token');
   }, []);
 
-  return <AuthContext.Provider value={{ user: authState.user, signIn, signOut }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user: authState.user, signIn, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

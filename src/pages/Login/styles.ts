@@ -9,6 +9,7 @@ export const Container = styled.div`
 
   display: flex;
   flex-direction: row;
+  justify-content: center;
 
   form {
     display: flex;
@@ -40,6 +41,22 @@ export const Container = styled.div`
 
       ::placeholder {
         color: #c9c9c9;
+      }
+    }
+
+    > button {
+      padding: 10px;
+      background: #fff;
+      border-radius: 10px;
+
+      color: #fff;
+      border: none;
+      margin-top: 20px;
+      background-color: #6d2ecc;
+      transition: background-color 0.2s;
+
+      :hover {
+        background-color: ${shade(0.2, '#6d2ecc')};
       }
     }
 

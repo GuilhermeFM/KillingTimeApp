@@ -7,8 +7,12 @@ export const Container = styled.label`
   font-size: 14px;
   color: #c3c3c3;
   user-select: none;
-
   cursor: pointer;
+
+  :hover input ~ span {
+    background-color: #ccc;
+    transition: background-color 0.3s;
+  }
 
   input {
     position: absolute;
@@ -16,11 +20,6 @@ export const Container = styled.label`
     cursor: pointer;
     height: 0;
     width: 0;
-  }
-
-  :hover input ~ span {
-    background-color: #ccc;
-    transition: background-color 0.3s;
   }
 
   input:checked ~ span {
