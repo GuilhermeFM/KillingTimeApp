@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 
 import { useAuth } from '../hooks/auth';
+import DefaultLayout from '../pages/_layout/default';
 
 interface RouteProps extends ReactRouterDomProps {
   component: React.ComponentType;
@@ -20,7 +21,17 @@ const Route: React.FC<RouteProps> = ({
 }) => {
   const { user } = useAuth();
 
-  if (path === '/' && user) {
+  if (!user) {
+    return (
+      <ReactRouterRoute
+        {...rest}
+        path={path}
+        render={() => <Redirect to="/" />}
+      />
+    );
+  }
+
+  if (user && path === '/') {
     return (
       <ReactRouterRoute
         {...rest}
@@ -30,55 +41,60 @@ const Route: React.FC<RouteProps> = ({
     );
   }
 
-  if (!isPrivate) {
-    return (
-      <ReactRouterRoute {...rest} path={path} render={() => <Component />} />
-    );
-  }
-
-  if (!user || !user.groups || user.groups.length <= 0) {
-    return (
-      <ReactRouterRoute
-        {...rest}
-        path={path}
-        render={() => <Redirect to="/" />}
-      />
-    );
-  }
-
-  const hasNoPermissions = user.groups.every(
-    (group) => !group.permissions || group.permissions.length <= 0,
-  );
-  if (hasNoPermissions) {
-    return (
-      <ReactRouterRoute
-        {...rest}
-        path={path}
-        render={() => <Redirect to="/" />}
-      />
-    );
-  }
-
-  const canAccessPage =
-    user.groups.findIndex((group) => {
+  if (isPrivate) {
+    if (!user || !user.groups || user.groups.length <= 0) {
       return (
-        group.permissions.findIndex(
-          (permission) => permission.path === path,
-        ) !== -1
+        <ReactRouterRoute
+          {...rest}
+          path={path}
+          render={() => <Redirect to="/Error" />}
+        />
       );
-    }) !== -1;
+    }
 
-  if (canAccessPage) {
-    return (
-      <ReactRouterRoute {...rest} path={path} render={() => <Component />} />
+    const hasNoPermissions = user.groups.every(
+      (group) => !group.permissions || group.permissions.length <= 0,
     );
+
+    if (hasNoPermissions) {
+      return (
+        <ReactRouterRoute
+          {...rest}
+          path={path}
+          render={() => <Redirect to="/Error" />}
+        />
+      );
+    }
+
+    const canAccessPage =
+      user.groups.findIndex((group) => {
+        return (
+          group.permissions.findIndex(
+            (permissio) => permissio.path === path,
+          ) !== -1
+        );
+      }) !== -1;
+
+    if (!canAccessPage) {
+      return (
+        <ReactRouterRoute
+          {...rest}
+          path={path}
+          render={() => <Redirect to="/Error" />}
+        />
+      );
+    }
   }
 
   return (
     <ReactRouterRoute
       {...rest}
       path={path}
-      render={() => <Redirect to="/Error" />}
+      render={() => (
+        <DefaultLayout>
+          <Component />
+        </DefaultLayout>
+      )}
     />
   );
 };

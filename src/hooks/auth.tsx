@@ -20,7 +20,7 @@ interface IAuthState {
 interface IAuthContext {
   user: IUser;
   signOut(): void;
-  signIn(username: string): Promise<void>;
+  signIn(username: string, password: string): Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
@@ -46,7 +46,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     return {} as IAuthState;
   });
 
-  const signIn = useCallback(async (username: string) => {
+  const signIn = useCallback(async (username: string, password: string) => {
     const response = await api.get('usuarios', { params: { q: username } });
 
     const [user] = response.data;

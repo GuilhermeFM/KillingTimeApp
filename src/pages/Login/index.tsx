@@ -17,9 +17,9 @@ const Login: React.FC = () => {
     (e: React.BaseSyntheticEvent) => {
       e.preventDefault();
 
-      signIn(username);
+      signIn(username, password);
     },
-    [signIn, username],
+    [signIn, username, password],
   );
 
   return (
