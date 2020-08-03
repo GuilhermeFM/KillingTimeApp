@@ -21,7 +21,7 @@ const Route: React.FC<RouteProps> = ({
 }) => {
   const { user } = useAuth();
 
-  if (!user) {
+  if (!user && path !== '/') {
     return (
       <ReactRouterRoute
         {...rest}
@@ -90,11 +90,15 @@ const Route: React.FC<RouteProps> = ({
     <ReactRouterRoute
       {...rest}
       path={path}
-      render={() => (
-        <DefaultLayout>
+      render={() =>
+        path === '/' || path === '/Error' ? (
           <Component />
-        </DefaultLayout>
-      )}
+        ) : (
+          <DefaultLayout>
+            <Component />
+          </DefaultLayout>
+        )
+      }
     />
   );
 };

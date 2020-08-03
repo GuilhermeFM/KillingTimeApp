@@ -5,7 +5,7 @@ import { Container } from './styles';
 const Dashboard: React.FC = () => {
   return (
     <Container>
-      <p>Dashboard</p>
+      <p>Home</p>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
         magna nulla, tempus id sodales a, eleifend eu enim. Aenean vel posuere
