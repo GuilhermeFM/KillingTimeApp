@@ -31,15 +31,17 @@ const Layout: React.FC = ({ children }) => {
         <span>Killing Time App</span>
       </AppTitle>
       <Header>
-        {pathname
-          .split('/')
-          .filter((pathPart) => pathPart !== '')
-          .map((pathPart) => (
-            <div key={pathPart}>
-              <FiChevronRight size={24} />
-              <span>{pathPart}</span>
-            </div>
-          ))}
+        <div>
+          {pathname
+            .split('/')
+            .filter((pathPart) => pathPart !== '')
+            .map((pathPart) => (
+              <div key={pathPart}>
+                <FiChevronRight size={24} />
+                <span>{pathPart}</span>
+              </div>
+            ))}
+        </div>
         <div>
           <FiBell size={24} />
           <div>

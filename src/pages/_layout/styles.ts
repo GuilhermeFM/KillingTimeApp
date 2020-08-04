@@ -39,15 +39,20 @@ export const Header = styled.header`
     display: flex;
     align-items: center;
 
-    > span {
-      font-size: 18px;
-      font-weight: bold;
-      margin-right: 10px;
-      text-transform: capitalize;
-    }
+    > div {
+      display: flex;
+      align-items: center;
 
-    > svg {
-      margin-right: 10px;
+      > span {
+        font-size: 18px;
+        font-weight: bold;
+        margin-right: 10px;
+        text-transform: capitalize;
+      }
+
+      > svg {
+        margin-right: 10px;
+      }
     }
   }
 
