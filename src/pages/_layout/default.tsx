@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import {
   FiBell,
@@ -7,8 +7,11 @@ import {
   FiInfo,
   FiPhone,
   FiLogOut,
+  FiSliders,
   FiChevronRight,
 } from 'react-icons/fi';
+
+import { FaAngleDown, FaCircle } from 'react-icons/fa';
 
 import { useAuth } from '../../hooks/auth';
 import { Container, AppTitle, Header, Menu, Content } from './styles';
@@ -56,20 +59,238 @@ const Layout: React.FC = ({ children }) => {
       <Menu>
         <ul>
           <li>
-            <FiHome size={24} />
-            <a href="/#">Home</a>
+            <a href="/#">
+              <FiHome size={24} />
+              Home
+            </a>
           </li>
           <li>
-            <FiInfo size={24} />
-            <a href="/#">About</a>
+            <a href="/#">
+              <FiInfo size={24} />
+              About
+            </a>
           </li>
           <li>
-            <FiPhone size={24} />
-            <a href="/#">Contact</a>
+            <a href="/#">
+              <FiPhone size={24} />
+              Contact
+            </a>
           </li>
           <li>
-            <FiLogOut size={24} />
+            <a href="/#">
+              <FiSliders size={24} />
+              Options
+              <FaAngleDown
+                style={{
+                  marginLeft: 'auto',
+                  marginRight: '15px',
+                  paddingTop: 2,
+                }}
+                size={22}
+              />
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
+            <a href="/#">
+              <FaCircle
+                size={8}
+                style={{ marginLeft: '8px', marginRight: '18px' }}
+              />
+              Groups
+            </a>
+          </li>
+          <li>
             <a href="/#" onClick={handleSignOut}>
+              <FiLogOut size={24} />
               Logout
             </a>
           </li>

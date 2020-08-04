@@ -7,7 +7,7 @@ export const Container = styled.div`
 
   display: grid;
   grid-template-rows: 80px 1fr;
-  grid-template-columns: 250px minmax(500px, 1fr);
+  grid-template-columns: 220px minmax(500px, 1fr);
   grid-template-areas: 'apptitle header' 'menu content';
 `;
 
@@ -91,6 +91,10 @@ export const Menu = styled.nav`
   background-color: #6d2ecc;
 
   > ul {
+    /* set max height */
+    max-height: calc(100vh - 140px);
+
+    /* make the menu sticky to the top when */
     position: sticky;
     top: 0px;
 
@@ -98,10 +102,27 @@ export const Menu = styled.nav`
     padding: 0;
     list-style-type: none;
 
-    > li {
-      display: flex;
-      align-content: center;
-      margin: 25px 0 0 25px;
+    /* Enable scroll when menu is to large */
+    overflow-y: auto;
+
+    /* customize scrolling */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #6d2ecc;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: ${shade(0.2, '#6d2ecc')};
+      border-radius: 20px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: ${shade(0.3, '#6d2ecc')};
+    }
+
+    li {
+      display: block;
+      margin: 25px 0 0 15px;
 
       :hover > svg {
         color: ${shade(0.4, '#FFF')};
@@ -111,18 +132,34 @@ export const Menu = styled.nav`
         color: ${shade(0.4, '#FFF')};
       }
 
-      > svg {
+      :hover > span {
+        color: ${shade(0.4, '#FFF')};
+      }
+
+      svg {
         color: #fff;
-        margin-right: 10px;
         transition: color 0.2s;
       }
 
       > a {
-        width: 100%;
+        display: flex;
+        align-items: center;
+
         color: #fff;
+        font-size: 18px;
+
         text-decoration: none;
         transition: color 0.2s;
-        align-self: center;
+
+        cursor: pointer;
+
+        > svg:first-of-type {
+          margin-right: 10px;
+        }
+
+        :hover > svg {
+          color: ${shade(0.4, '#FFF')};
+        }
       }
     }
   }
@@ -131,11 +168,12 @@ export const Menu = styled.nav`
     top: 0;
     bottom: 0px;
     position: sticky;
-    font-size: 12px;
-    color: ${shade(0.3, '#fff')};
-    margin-top: auto;
     align-self: center;
+
+    font-size: 12px;
+    margin-top: auto;
     padding-bottom: 20px;
+    color: ${shade(0.3, '#fff')};
   }
 `;
 
