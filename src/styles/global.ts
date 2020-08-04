@@ -21,10 +21,10 @@ export default createGlobalStyle`
     min-width: 480;
     min-height: 700px;
 
-    /* Enable scroll when menu is to large */
+    /* Enable scroll when view is to long */
     overflow-y: auto;
 
-    /* customize scrolling */
+    /* customize scrollbar */
     ::-webkit-scrollbar {
       width: 10px;
     }
