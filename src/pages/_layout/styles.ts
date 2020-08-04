@@ -2,55 +2,60 @@ import styled from 'styled-components';
 import { shade } from 'polished';
 
 export const Container = styled.div`
-  width: 100%;
-  height: 100%;
-
-  display: flex;
-  flex-direction: row;
-`;
-
-export const Content = styled.div`
   flex: 1;
   height: 100%;
+
+  display: grid;
+  grid-template-rows: 80px 1fr;
+  grid-template-columns: 250px minmax(500px, 1fr);
+  grid-template-areas: 'apptitle header' 'menu content';
+`;
+
+export const AppTitle = styled.div`
+  grid-area: apptitle;
+
+  color: #fff;
+  padding: 20px;
+  font-size: 20px;
+  font-weight: 300;
+  background-color: ${shade(0.2, '#6d2ecc')};
+
+  display: flex;
+  align-items: center;
 `;
 
 export const Header = styled.header`
-  max-height: 80px;
-  padding: 20px;
+  grid-area: header;
 
   display: flex;
-  flex-direction: row;
+  flex-flow: row nowrap;
   justify-content: space-between;
-  align-items: center;
 
+  width: 100%;
+  padding: 0 10px 0 10px;
+
+  /* Breadcumb */
   > div {
     display: flex;
     align-items: center;
-  }
 
-  svg {
-    color: #00000055;
-  }
+    > span {
+      font-size: 18px;
+      font-weight: bold;
+      margin-right: 10px;
+      text-transform: capitalize;
+    }
 
-  div:nth-of-type(1) {
-    > div {
-      display: flex;
-      align-items: center;
-
-      > span {
-        font-size: 18px;
-        font-weight: bold;
-        margin-right: 10px;
-        text-transform: capitalize;
-      }
-
-      > svg {
-        margin-right: 10px;
-      }
+    > svg {
+      margin-right: 10px;
     }
   }
 
-  > div:nth-of-type(2) {
+  /* Profile Info */
+  > div:last-of-type {
+    display: flex;
+    align-items: center;
+
     > svg {
       margin-right: 30px;
     }
@@ -74,76 +79,62 @@ export const Header = styled.header`
 `;
 
 export const Menu = styled.nav`
-  flex: 1;
-  max-width: 250px;
-  height: 100%;
+  grid-area: menu;
 
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  background-color: #6d2ecc;
 
-  min-width: 150px;
+  > ul {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
 
-  > div:nth-of-type(1) {
-    color: #fff;
-    padding: 20px;
-    min-height: 80px;
-    background-color: ${shade(0.2, '#6d2ecc')};
+    > li {
+      display: flex;
+      align-content: center;
+      margin: 25px 0 0 25px;
 
-    font-size: 20px;
-    font-weight: 300;
+      :hover > svg {
+        color: ${shade(0.4, '#FFF')};
+      }
 
-    display: flex;
-    align-items: center;
-  }
+      :hover > a {
+        color: ${shade(0.4, '#FFF')};
+      }
 
-  > div:nth-of-type(2) {
-    display: flex;
-    flex-direction: column;
+      > svg {
+        color: #fff;
+        margin-right: 10px;
+        transition: color 0.2s;
+      }
 
-    height: 100%;
-    background-color: #6d2ecc;
-
-    > ul {
-      flex: 1;
-      margin: 0;
-      padding: 0;
-      list-style-type: none;
-
-      > li {
-        display: flex;
-        align-content: center;
-        margin: 25px 0 0 25px;
-
-        :hover > svg {
-          color: ${shade(0.4, '#FFF')};
-        }
-
-        :hover > a {
-          color: ${shade(0.4, '#FFF')};
-        }
-
-        > svg {
-          color: #fff;
-          margin-right: 10px;
-          transition: color 0.2s;
-        }
-
-        > a {
-          width: 100%;
-          color: #fff;
-          text-decoration: none;
-          transition: color 0.2s;
-          align-self: center;
-        }
+      > a {
+        width: 100%;
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.2s;
+        align-self: center;
       }
     }
-
-    > p {
-      font-size: 12px;
-      align-self: center;
-      margin-bottom: 20px;
-      color: ${shade(0.3, '#fff')};
-    }
   }
+
+  > p {
+    font-size: 12px;
+    align-self: center;
+    margin-bottom: 20px;
+    color: ${shade(0.3, '#fff')};
+  }
+`;
+
+export const Content = styled.div`
+  grid-area: content;
+
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+
+  padding: 10px;
 `;
