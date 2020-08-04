@@ -33,13 +33,20 @@ export const Header = styled.header`
   }
 
   div:nth-of-type(1) {
-    > span {
-      font-size: 18px;
-      font-weight: bold;
-    }
+    > div {
+      display: flex;
+      align-items: center;
 
-    > svg {
-      margin-right: 10px;
+      > span {
+        font-size: 18px;
+        font-weight: bold;
+        margin-right: 10px;
+        text-transform: capitalize;
+      }
+
+      > svg {
+        margin-right: 10px;
+      }
     }
   }
 
@@ -127,6 +134,7 @@ export const Menu = styled.nav`
           color: #fff;
           text-decoration: none;
           transition: color 0.2s;
+          align-self: center;
         }
       }
     }

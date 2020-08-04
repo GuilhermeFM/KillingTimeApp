@@ -57,8 +57,8 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('@Gobarber:permissoes');
-    localStorage.removeItem('@Gobarber:token');
+    localStorage.removeItem('@Gobarber:user');
+    setAuthState({} as IAuthState);
   }, []);
 
   return (
