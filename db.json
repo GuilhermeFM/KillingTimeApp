@@ -7,10 +7,7 @@
         {
           "id": 1,
           "name": "Usuario",
-          "permissions": [
-            { "id": 1, "path": "/" },
-            { "id": 2, "path": "/dashboard" }
-          ]
+          "permissions": [{ "id": 2, "path": "/dashboard", "icon": "FiHome" }]
         }
       ]
     },
@@ -22,12 +19,15 @@
           "id": 2,
           "name": "administrador",
           "permissions": [
-            { "id": 1, "path": "/" },
-            { "id": 2, "path": "/dashboard" },
-            { "id": 3, "path": "/administrativo/grupos" },
-            { "id": 4, "path": "/administrativo/usuarios" },
-            { "id": 5, "path": "/administrativo/permissoes" },
-            { "id": 6, "path": "/administrativo/controle/versao" }
+            { "id": 2, "path": "/dashboard", "icon": "FiHome" },
+            { "id": 3, "path": "/administrativo/grupos", "icon": "FiHome" },
+            { "id": 4, "path": "/administrativo/usuarios", "icon": "FiHome" },
+            { "id": 5, "path": "/administrativo/permissoes", "icon": "FiHome" },
+            {
+              "id": 6,
+              "path": "/administrativo/controle/versao",
+              "icon": "FiHome"
+            }
           ]
         }
       ]

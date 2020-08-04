@@ -88,11 +88,12 @@ export const Menu = styled.nav`
 
   display: flex;
   flex-flow: column nowrap;
-  justify-content: space-between;
   background-color: #6d2ecc;
 
   > ul {
-    flex: 1;
+    position: sticky;
+    top: 0px;
+
     margin: 0;
     padding: 0;
     list-style-type: none;
@@ -127,10 +128,14 @@ export const Menu = styled.nav`
   }
 
   > p {
+    top: 0;
+    bottom: 0px;
+    position: sticky;
     font-size: 12px;
-    align-self: center;
-    margin-bottom: 20px;
     color: ${shade(0.3, '#fff')};
+    margin-top: auto;
+    align-self: center;
+    padding-bottom: 20px;
   }
 `;
 
