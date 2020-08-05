@@ -3,31 +3,71 @@
     {
       "id": 1,
       "name": "Guilherme Frizzera Meira",
+      "menu": [
+        {
+          "icon": "FiHome",
+          "name": "Dashboard",
+          "url": "/Dashboard"
+        }
+      ],
       "groups": [
         {
           "id": 1,
-          "name": "Usuario",
-          "permissions": [{ "id": 2, "path": "/dashboard", "icon": "FiHome" }]
+          "name": "Users",
+          "permissions": [{ "id": 2, "path": "/dashboard" }]
         }
       ]
     },
     {
       "id": 2,
       "name": "Eduardo Frizzera Meira",
+      "menu": [
+        {
+          "icon": "FiHome",
+          "name": "Dashboard",
+          "url": "/Dashboard"
+        },
+        {
+          "icon": "FiSliders",
+          "name": "Options",
+          "items": [
+            {
+              "icon": "FiUsers",
+              "name": "Groups",
+              "url": "/options/groups"
+            },
+            {
+              "icon": "FiUser",
+              "name": "Users",
+              "url": "/options/users"
+            },
+            {
+              "icon": "FiUser",
+              "name": "Permissions",
+              "url": "/options/permissions"
+            },
+            {
+              "icon": "FiUser",
+              "name": "Version Control",
+              "url": "/options/control/version"
+            }
+          ]
+        }
+      ],
       "groups": [
         {
+          "id": 1,
+          "name": "Users",
+          "permissions": [{ "id": 2, "path": "/dashboard" }]
+        },
+        {
           "id": 2,
-          "name": "administrador",
+          "name": "Administrator",
           "permissions": [
-            { "id": 2, "path": "/dashboard", "icon": "FiHome" },
-            { "id": 3, "path": "/administrativo/grupos", "icon": "FiHome" },
-            { "id": 4, "path": "/administrativo/usuarios", "icon": "FiHome" },
-            { "id": 5, "path": "/administrativo/permissoes", "icon": "FiHome" },
-            {
-              "id": 6,
-              "path": "/administrativo/controle/versao",
-              "icon": "FiHome"
-            }
+            { "id": 3, "path": "/options/groups" },
+            { "id": 4, "path": "/options/users" },
+            { "id": 5, "path": "/options/permissions" },
+            { "id": 6, "path": "/options/control/version" }
           ]
         }
       ]

@@ -4,11 +4,18 @@ import api from '../services/api';
 interface IUser {
   id: number;
   name: string;
+  menu: {
+    icon: string;
+    name: string;
+    url: string;
+    items: { icon: string; name: string; url: string }[];
+  }[];
   groups: {
     name: string;
     permissions: {
       id: number;
       path: string;
+      icon: string;
     }[];
   }[];
 }

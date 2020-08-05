@@ -43,7 +43,6 @@ export default createGlobalStyle`
     ::-webkit-scrollbar-thumb:hover {
       background: ${shade(0.3, '#c3c3c3')};
     }
-
   }
 
   html, body {

@@ -7,7 +7,7 @@ export const Container = styled.div`
 
   display: grid;
   grid-template-rows: 80px 1fr;
-  grid-template-columns: 220px minmax(500px, 1fr);
+  grid-template-columns: 250px minmax(500px, 1fr);
   grid-template-areas: 'apptitle header' 'menu content';
 `;
 
