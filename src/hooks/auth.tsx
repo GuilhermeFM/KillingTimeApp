@@ -1,7 +1,7 @@
 import React, { createContext, useState, useCallback, useContext } from 'react';
 import api from '../services/api';
 
-interface IUser {
+export interface IUser {
   id: number;
   name: string;
   menu: {
