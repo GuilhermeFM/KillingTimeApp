@@ -5,6 +5,7 @@
       "name": "Guilherme Frizzera Meira",
       "menu": [
         {
+          "id": 1,
           "icon": "FiHome",
           "name": "Dashboard",
           "url": "/Dashboard"
@@ -23,35 +24,77 @@
       "name": "Eduardo Frizzera Meira",
       "menu": [
         {
+          "id": 2,
           "icon": "FiHome",
           "name": "Dashboard",
           "url": "/Dashboard"
         },
         {
+          "id": 3,
           "icon": "FiSliders",
           "name": "Options",
           "items": [
             {
+              "id": 4,
               "icon": "FiUsers",
               "name": "Groups",
               "url": "/options/groups"
             },
             {
+              "id": 5,
               "icon": "FiUser",
               "name": "Users",
               "url": "/options/users"
             },
             {
+              "id": 6,
               "icon": "FiUser",
               "name": "Permissions",
               "url": "/options/permissions"
             },
             {
+              "id": 7,
               "icon": "FiUser",
               "name": "Version Control",
               "url": "/options/control/version"
             }
           ]
+        },
+        {
+          "id": 8,
+          "icon": "FiSliders",
+          "name": "Options 2",
+          "items": [
+            {
+              "id": 9,
+              "icon": "FiUsers",
+              "name": "Groups",
+              "url": "/options/groups"
+            },
+            {
+              "id": 10,
+              "icon": "FiUser",
+              "name": "Users",
+              "url": "/options/users"
+            },
+            {
+              "id": 11,
+              "icon": "FiUser",
+              "name": "Permissions",
+              "url": "/options/permissions"
+            },
+            {
+              "id": 12,
+              "icon": "FiUser",
+              "name": "Version Control",
+              "url": "/options/control/version"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "icon": "FiLogOut",
+          "name": "Logout"
         }
       ],
       "groups": [

@@ -1,7 +1,10 @@
 import React, { useCallback } from 'react';
+import { useTransition } from 'react-spring';
+
+import { useAuth } from '../../../hooks/auth';
 
 import Item from './Item';
-import { useAuth } from '../../../hooks/auth';
+import Expandable from './Expandable';
 import { Container } from './styles';
 
 const Menu: React.FC = () => {
@@ -15,30 +18,37 @@ const Menu: React.FC = () => {
     [signOut],
   );
 
+  const menuTransition = useTransition(user.menu, (items) => items.id, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+  });
+
   return (
     <Container>
       <ul>
-        {user.menu.map((menu) => {
+        {menuTransition.map(({ item: menu, key, props }) => {
           if (menu.items) {
             return (
-              <>
-                <Item
-                  hasSubmenu
-                  url={menu.url}
-                  icon={menu.icon}
-                  name={menu.name}
-                />
-                <ul>
-                  {menu.items.map((item) => (
-                    <Item isSubmenu url={item.url} name={item.name} />
-                  ))}
-                </ul>
-              </>
+              <Expandable
+                icon={menu.icon}
+                name={menu.name}
+                items={menu.items}
+                style={props}
+              />
             );
           }
-          return <Item icon={menu.icon} url={menu.url} name={menu.name} />;
+          return (
+            <Item
+              key={key}
+              style={props}
+              url={menu.url}
+              icon={menu.icon}
+              name={menu.name}
+              onClick={(e) => e.preventDefault()}
+            />
+          );
         })}
-        <Item icon="FiLogOut" name="Logout" onClick={handleSignOut} />
       </ul>
       <p>All Rights Reserved v1.0</p>
     </Container>

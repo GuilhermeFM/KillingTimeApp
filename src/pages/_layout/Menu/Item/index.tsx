@@ -15,6 +15,7 @@ interface ItemProps {
   icon?: string;
   name: string;
 
+  style?: object;
   onClick?: (e: React.BaseSyntheticEvent) => void;
 }
 
@@ -25,13 +26,14 @@ const Item: React.FC<ItemProps> = ({
   hasSubmenu,
   isSubmenu,
   onClick,
+  style,
 }) => {
   const MenuItem = useMemo(() => {
     const MenuIcon = icon ? (getKeyValue(icon)(FiIcon) as IconType) : FaCircle;
 
     if (hasSubmenu) {
       return (
-        <Container key={name}>
+        <Container style={style}>
           <a href="/#" onClick={onClick}>
             <MenuIcon size={24} />
             {name}
@@ -50,7 +52,7 @@ const Item: React.FC<ItemProps> = ({
 
     if (isSubmenu && url) {
       return (
-        <Container key={name}>
+        <Container style={style}>
           <Link to={url}>
             <FaCircle
               size={8}
@@ -62,15 +64,26 @@ const Item: React.FC<ItemProps> = ({
       );
     }
 
+    if (url) {
+      return (
+        <Container style={style}>
+          <Link to={url}>
+            <MenuIcon size={24} />
+            {name}
+          </Link>
+        </Container>
+      );
+    }
+
     return (
-      <Container key={name}>
+      <Container style={style}>
         <a href="/#" onClick={onClick}>
           <MenuIcon size={24} />
           {name}
         </a>
       </Container>
     );
-  }, [url, icon, name, isSubmenu, hasSubmenu, onClick]);
+  }, [url, icon, name, isSubmenu, hasSubmenu, style, onClick]);
 
   return MenuItem;
 };

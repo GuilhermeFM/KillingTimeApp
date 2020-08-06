@@ -1,15 +1,25 @@
 import React, { createContext, useState, useCallback, useContext } from 'react';
 import api from '../services/api';
 
+export interface IMenu {
+  id: number;
+  icon: string;
+  name: string;
+  url: string;
+  items: IMenuItem[];
+}
+
+export interface IMenuItem {
+  id: number;
+  icon: string;
+  name: string;
+  url: string;
+}
+
 export interface IUser {
   id: number;
   name: string;
-  menu: {
-    icon: string;
-    name: string;
-    url: string;
-    items: { icon: string; name: string; url: string }[];
-  }[];
+  menu: IMenu[];
   groups: {
     name: string;
     permissions: {

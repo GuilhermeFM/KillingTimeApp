@@ -1,7 +1,10 @@
 import styled from 'styled-components';
+import { animated } from 'react-spring';
 import { shade } from 'polished';
 
-export const Container = styled.li`
+export const Container = styled(animated.li)`
+  will-change: height;
+
   display: block;
   margin: 25px 0 0 15px;
 
