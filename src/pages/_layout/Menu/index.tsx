@@ -1,11 +1,10 @@
 import React, { useCallback } from 'react';
-import { useTransition } from 'react-spring';
 
 import { useAuth } from '../../../hooks/auth';
 
 import Item from './Item';
 import Expandable from './Expandable';
-import { Container } from './styles';
+import { NavItem, NavBottom } from './styles';
 
 const Menu: React.FC = () => {
   const { user, signOut } = useAuth();
@@ -18,40 +17,33 @@ const Menu: React.FC = () => {
     [signOut],
   );
 
-  const menuTransition = useTransition(user.menu, (items) => items.id, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-  });
-
   return (
-    <Container>
-      <ul>
-        {menuTransition.map(({ item: menu, key, props }) => {
-          if (menu.items) {
+    <>
+      <NavItem>
+        {user.menu.map((item) => {
+          if (item.items) {
             return (
               <Expandable
-                icon={menu.icon}
-                name={menu.name}
-                items={menu.items}
-                style={props}
+                icon={item.icon}
+                name={item.name}
+                items={item.items}
               />
             );
           }
           return (
             <Item
-              key={key}
-              style={props}
-              url={menu.url}
-              icon={menu.icon}
-              name={menu.name}
+              key={item.id}
+              url={item.url}
+              icon={item.icon}
+              name={item.name}
               onClick={(e) => e.preventDefault()}
             />
           );
         })}
-      </ul>
-      <p>All Rights Reserved v1.0</p>
-    </Container>
+        <Item icon="FiLogOut" name="Logout" onClick={(e) => handleSignOut(e)} />
+      </NavItem>
+      <NavBottom>All Rights Reserved v1.0</NavBottom>
+    </>
   );
 };
 

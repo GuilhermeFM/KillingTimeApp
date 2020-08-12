@@ -90,11 +90,6 @@
               "url": "/options/control/version"
             }
           ]
-        },
-        {
-          "id": 13,
-          "icon": "FiLogOut",
-          "name": "Logout"
         }
       ],
       "groups": [
