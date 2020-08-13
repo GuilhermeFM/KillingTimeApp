@@ -9,46 +9,27 @@ export const Container = styled.div`
   grid-template-rows: 80px 1fr;
   grid-template-columns: 250px minmax(500px, 1fr);
   grid-template-areas: 'apptitle header' 'menu content';
+`;
 
-  > div#AppTitle {
-    grid-area: apptitle;
+export const AppTitle = styled.div`
+  grid-area: apptitle;
 
-    color: #fff;
-    padding: 20px;
-    font-size: 20px;
-    font-weight: 300;
-    background-color: ${shade(0.2, '#6d2ecc')};
+  color: #fff;
+  padding: 20px;
+  font-size: 20px;
+  font-weight: 300;
+  background-color: ${shade(0.2, '#6d2ecc')};
 
-    display: flex;
-    align-items: center;
-  }
+  display: flex;
+  align-items: center;
+`;
 
-  > header {
-    grid-area: header;
+export const Content = styled.div`
+  grid-area: content;
 
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
 
-    width: 100%;
-    padding: 0 10px 0 10px;
-  }
-
-  > nav {
-    grid-area: menu;
-
-    display: flex;
-    flex-flow: column nowrap;
-    background-color: #6d2ecc;
-  }
-
-  > div#Content {
-    grid-area: content;
-
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-
-    padding: 10px;
-  }
+  padding: 10px;
 `;

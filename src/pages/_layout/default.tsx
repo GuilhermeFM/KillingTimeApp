@@ -3,21 +3,17 @@ import React from 'react';
 import Menu from './Menu';
 import Header from './Header';
 
-import { Container } from './styles';
+import { Container, AppTitle, Content } from './styles';
 
 const Layout: React.FC = ({ children }) => {
   return (
     <Container>
-      <div id="AppTitle">
+      <AppTitle>
         <span>Killing Time App</span>
-      </div>
-      <header>
-        <Header />
-      </header>
-      <nav>
-        <Menu />
-      </nav>
-      <div id="Content">{children}</div>
+      </AppTitle>
+      <Header />
+      <Menu />
+      <Content>{children}</Content>
     </Container>
   );
 };

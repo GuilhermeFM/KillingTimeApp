@@ -28,15 +28,6 @@ const Expandable: React.FC<ExpandableProps> = ({
     [] as ExpandableItems[],
   );
 
-  const transition = useTransition(expandableItems, (item) => item.id, {
-    from: { opacity: 0, height: 0, marginTop: 0 },
-    enter: [{ height: 25, marginTop: 25 }, { opacity: 1 }],
-    leave: [{ opacity: 0 }, { height: 0, marginTop: 0 }],
-    config: {
-      duration: 150,
-    },
-  });
-
   const handleExpandMenu = useCallback(
     (e: React.BaseSyntheticEvent) => {
       e.preventDefault();
@@ -51,6 +42,15 @@ const Expandable: React.FC<ExpandableProps> = ({
     },
     [expanded, items],
   );
+
+  const transition = useTransition(expandableItems, (item) => item.id, {
+    from: { opacity: 0, height: 0, marginTop: 0 },
+    enter: { opacity: 1, height: 25, marginTop: 25 },
+    leave: { opacity: 0, height: 0, marginTop: 0 },
+    config: {
+      duration: 250,
+    },
+  });
 
   return (
     <>
