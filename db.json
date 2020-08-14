@@ -2,7 +2,7 @@
   "usuarios": [
     {
       "id": 1,
-      "name": "Guilherme Frizzera Meira",
+      "name": "Someone",
       "nav": [
         {
           "id": 1,
@@ -21,7 +21,7 @@
     },
     {
       "id": 2,
-      "name": "Eduardo Frizzera Meira",
+      "name": "Another Someone",
       "nav": [
         {
           "id": 2,
