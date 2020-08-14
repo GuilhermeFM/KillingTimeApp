@@ -1,15 +1,15 @@
 import React, { createContext, useState, useCallback, useContext } from 'react';
 import api from '../services/api';
 
-export interface IMenu {
+export interface INav {
   id: number;
   icon: string;
   name: string;
   url: string;
-  items: IMenuItem[];
+  items: INavItem[];
 }
 
-export interface IMenuItem {
+export interface INavItem {
   id: number;
   icon: string;
   name: string;
@@ -19,7 +19,7 @@ export interface IMenuItem {
 export interface IUser {
   id: number;
   name: string;
-  menu: IMenu[];
+  nav: INav[];
   groups: {
     name: string;
     permissions: {

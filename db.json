@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "Guilherme Frizzera Meira",
-      "menu": [
+      "nav": [
         {
           "id": 1,
           "icon": "FiHome",
@@ -22,7 +22,7 @@
     {
       "id": 2,
       "name": "Eduardo Frizzera Meira",
-      "menu": [
+      "nav": [
         {
           "id": 2,
           "icon": "FiHome",
@@ -90,11 +90,6 @@
               "url": "/options/control/version"
             }
           ]
-        },
-        {
-          "id": 13,
-          "icon": "FiLogOut",
-          "name": "Logout"
         }
       ],
       "groups": [

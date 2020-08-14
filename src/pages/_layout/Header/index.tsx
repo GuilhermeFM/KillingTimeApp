@@ -3,15 +3,15 @@ import { useLocation } from 'react-router-dom';
 import { FiChevronRight, FiBell } from 'react-icons/fi';
 
 import { useAuth } from '../../../hooks/auth';
-import { Container } from './styles';
+import { Breadcumb, Profile } from './styles';
 
 const Header: React.FC = () => {
   const { user } = useAuth();
   const { pathname } = useLocation();
 
   return (
-    <Container>
-      <div>
+    <>
+      <Breadcumb>
         {pathname
           .split('/')
           .filter((pathPart) => pathPart !== '')
@@ -21,8 +21,8 @@ const Header: React.FC = () => {
               <span>{pathPart}</span>
             </div>
           ))}
-      </div>
-      <div>
+      </Breadcumb>
+      <Profile>
         <FiBell size={24} />
         <div>
           <p>{user.name}</p>
@@ -31,8 +31,8 @@ const Header: React.FC = () => {
           src={`https://api.adorable.io/avatars/48/${user.name}@adorable.png`}
           alt="Profile"
         />
-      </div>
-    </Container>
+      </Profile>
+    </>
   );
 };
 
