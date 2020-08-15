@@ -54,7 +54,7 @@ export const useAuth = (): IAuthContext => {
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [authState, setAuthState] = useState<IAuthState>(() => {
-    const user = localStorage.getItem('@Gobarber:user');
+    const user = localStorage.getItem('@KTApp:user');
 
     if (user) {
       return { user: JSON.parse(user) };
@@ -68,13 +68,13 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     const [user] = response.data;
 
-    localStorage.setItem('@Gobarber:user', JSON.stringify(user));
+    localStorage.setItem('@KTApp:user', JSON.stringify(user));
 
     setAuthState({ user });
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('@Gobarber:user');
+    localStorage.removeItem('@KTApp:user');
     setAuthState({} as IAuthState);
   }, []);
 
