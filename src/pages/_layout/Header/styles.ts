@@ -24,24 +24,38 @@ export const Breadcumb = styled.div`
 export const Profile = styled.div`
   display: flex;
   align-items: center;
+  margin-right: 15px;
 
   > svg {
+    margin-top: 5px;
     margin-right: 30px;
   }
 
-  > div {
+  a#userInfo {
     color: #000;
-    display: block;
-    margin-right: 15px;
+    display: flex;
+    flex-flow: row nowrap;
+
+    margin-left: 10px;
+    margin-right: 5px;
+
+    text-decoration: none;
 
     > p {
       font-size: 18px;
     }
+
+    > div {
+      width: 18px;
+      height: 18px;
+      margin-left: 5px;
+      margin-top: 2px;
+    }
   }
 
   > img {
-    width: 48px;
-    height: 48px;
-    border-radius: 24px;
+    width: 36px;
+    height: 36px;
+    border-radius: 16px;
   }
 `;

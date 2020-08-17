@@ -36,7 +36,7 @@ const NavItemExpandable: React.FC<NavItemExpandableProps> = ({
   });
 
   const handleExpand = useCallback(
-    (e) => {
+    (e: React.SyntheticEvent) => {
       if (onClick) {
         onClick(e);
       }
