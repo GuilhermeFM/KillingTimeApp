@@ -8,14 +8,12 @@ import { useAuth } from '../../../hooks/auth';
 import { Breadcumb, Profile } from './styles';
 
 const Header: React.FC = () => {
-  const [profileNavExpaned, setProfileNavExpaned] = useState(false);
-
   const { user } = useAuth();
   const { pathname } = useLocation();
+  const [profileNavExpaned, setProfileNavExpaned] = useState(false);
+
   const profileIconSpring = useSpring({
-    to: {
-      transform: `rotate(${profileNavExpaned ? 180 : 0}deg)`,
-    },
+    to: { transform: `rotate(${profileNavExpaned ? 180 : 0}deg)` },
   });
 
   const handleExpandProfileNav = useCallback((e: React.SyntheticEvent) => {
@@ -36,14 +34,14 @@ const Header: React.FC = () => {
             </div>
           ))}
       </Breadcumb>
+
       <Profile>
         <FiBell size={24} />
         <img
           src={`https://api.adorable.io/avatars/36/${user.name}@adorable.png`}
           alt="Profile"
         />
-
-        <a id="userInfo" href="/#" onClick={handleExpandProfileNav}>
+        <a href="/#" onClick={handleExpandProfileNav}>
           <p>{user.name}</p>
           <animated.div style={profileIconSpring}>
             <FaAngleDown size={18} color="#000" />

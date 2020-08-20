@@ -27,11 +27,11 @@ export const Profile = styled.div`
   margin-right: 15px;
 
   > svg {
-    margin-top: 5px;
+    margin-top: 3px;
     margin-right: 30px;
   }
 
-  a#userInfo {
+  > a {
     color: #000;
     display: flex;
     flex-flow: row nowrap;
