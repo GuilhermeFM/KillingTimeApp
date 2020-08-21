@@ -35,72 +35,72 @@ const Nav: React.FC = () => {
       <NavItems>
         <NavItem
           url="/#"
-          leftIcon={() => <FiGrid size={24} color="#fff" />}
+          leftIcon={() => <FiGrid size={24} />}
           name="Dashboard"
         />
 
         <NavItem
           url="/#"
-          leftIcon={() => <FiUsers size={24} color="#fff" />}
-          rightIcon={() => <FaAngleDown size={24} color="#fff" />}
+          leftIcon={() => <FiUsers size={24} />}
+          rightIcon={() => <FaAngleDown size={24} />}
           name="Company"
         />
 
         <NavItemExpandable
-          leftIcon={() => <FiShoppingCart size={24} color="#fff" />}
+          leftIcon={() => <FiShoppingCart size={24} />}
           onClick={(e) => e.preventDefault()}
           name="Products"
         >
           <ExpandableItem
             url="/#"
-            leftIcon={() => <FaCircle size={8} color="#fff" />}
+            leftIcon={() => <FaCircle size={8} />}
             name="Platforms"
           />
           <ExpandableItem
             url="/#"
-            leftIcon={() => <FaCircle size={8} color="#fff" />}
+            leftIcon={() => <FaCircle size={8} />}
             name="Programmers"
           />
           <ExpandableItem
             url="/#"
-            leftIcon={() => <FaCircle size={8} color="#fff" />}
+            leftIcon={() => <FaCircle size={8} />}
             name="Vehicle Lines"
           />
         </NavItemExpandable>
 
         <NavItem
           url="/#"
-          leftIcon={() => <FiFileText size={24} color="#fff" />}
-          rightIcon={() => <FaAngleDown size={24} color="#fff" />}
+          leftIcon={() => <FiFileText size={24} />}
+          rightIcon={() => <FaAngleDown size={24} />}
           name="Issues"
         />
         <NavItem
           url="/#"
-          leftIcon={() => <FiDroplet size={24} color="#fff" />}
-          rightIcon={() => <FaAngleDown size={24} color="#fff" />}
+          leftIcon={() => <FiDroplet size={24} />}
+          rightIcon={() => <FaAngleDown size={24} />}
           name="Design"
         />
         <NavItem
           url="/#"
-          leftIcon={() => <FiActivity size={24} color="#fff" />}
-          rightIcon={() => <FaAngleDown size={24} color="#fff" />}
+          leftIcon={() => <FiActivity size={24} />}
+          rightIcon={() => <FaAngleDown size={24} />}
           name="Testing"
         />
         <NavItem
           url="/#"
-          leftIcon={() => <FiGitMerge size={24} color="#fff" />}
-          rightIcon={() => <FaAngleDown size={24} color="#fff" />}
+          leftIcon={() => <FiGitMerge size={24} />}
+          rightIcon={() => <FaAngleDown size={24} />}
           name="Development"
         />
         <NavItem
           url="/#"
-          leftIcon={() => <FiSend size={24} color="#fff" />}
-          rightIcon={() => <FaAngleDown size={24} color="#fff" />}
+          leftIcon={() => <FiSend size={24} />}
+          rightIcon={() => <FaAngleDown size={24} />}
           name="Feedback"
         />
         <NavItem
           url="/#"
-          leftIcon={() => <FiLogOut size={24} color="#fff" />}
+          leftIcon={() => <FiLogOut size={24} />}
           name="Logout"
           onClick={handleSignOut}
         />

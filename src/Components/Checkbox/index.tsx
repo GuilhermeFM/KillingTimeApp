@@ -5,7 +5,7 @@ import { Container } from './styles';
 const Checkbox: React.FC = ({ children }) => {
   return (
     <Container>
-      {children}
+      <p>{children}</p>
       <input type="checkbox" />
       <span />
     </Container>

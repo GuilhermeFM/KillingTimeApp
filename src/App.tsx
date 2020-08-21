@@ -1,18 +1,22 @@
 import React from 'react';
+import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
 
 import GlobalStyle from './styles/global';
+import lightDark from './themes/lightDark';
 import { AuthProvider } from './hooks/auth';
 import Routes from './routes';
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes />
-      </AuthProvider>
-      <GlobalStyle />
-    </BrowserRouter>
+    <ThemeProvider theme={lightDark}>
+      <BrowserRouter>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
+        <GlobalStyle />
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 

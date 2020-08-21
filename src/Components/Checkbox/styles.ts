@@ -1,13 +1,23 @@
 import styled from 'styled-components';
 
 export const Container = styled.label`
-  display: block;
+  display: flex;
+  height: 20px;
+  align-items: center;
   position: relative;
   padding-left: 30px;
   font-size: 14px;
   color: #c3c3c3;
   user-select: none;
   cursor: pointer;
+
+  > p {
+    margin-top: 2px;
+  }
+  :hover p {
+    color: #ccc;
+    transition: color 0.3s;
+  }
 
   :hover input ~ span {
     background-color: #ccc;

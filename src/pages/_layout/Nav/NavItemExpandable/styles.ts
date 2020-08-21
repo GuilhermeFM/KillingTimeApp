@@ -14,13 +14,5 @@ export const ExpandableItem = styled(NavItem)`
     width: 18px;
     margin-left: auto;
     margin-right: 18px;
-
-    > svg:first-child {
-      color: #fff;
-    }
-
-    > svg:not(:first-child) {
-      color: #fff;
-    }
   }
 `;

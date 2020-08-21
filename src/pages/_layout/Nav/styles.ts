@@ -18,24 +18,24 @@ export const NavItems = styled.div`
     width: 5px;
   }
   ::-webkit-scrollbar-track {
-    background: #6d2ecc;
+    background: ${(props) => props.theme.sideNavSelectedColor};
   }
   ::-webkit-scrollbar-thumb {
-    background: ${shade(0.2, '#6d2ecc')};
+    background: ${(props) => props.theme.sideNavBgColor};
     border-radius: 20px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: ${shade(0.3, '#6d2ecc')};
+    background: ${(props) => shade(0.3, props.theme.sideNavBgColor)};
   }
 
   padding-top: 20px;
 `;
 
 export const ExpandableItem = styled(NavItem)`
-  padding-left: 23px;
+  padding-left: 38px;
 
   svg {
-    margin-right: 23px !important;
+    margin-right: 38px !important;
   }
 `;
 
@@ -48,5 +48,5 @@ export const NavBottom = styled.p`
   font-size: 12px;
   margin-top: auto;
   padding-bottom: 20px;
-  color: ${shade(0.3, '#fff')};
+  color: ${(props) => shade(0.3, props.theme.sideNavFontColor)};
 `;
