@@ -1,27 +1,15 @@
 import React from 'react';
 
-import Nav from './Nav';
-import Header from './Header';
-
 import { Container } from './styles';
 
-const Layout: React.FC = ({ children }) => {
+import Header from '../../Components/Header';
+
+const Default: React.FC = () => {
   return (
     <Container>
-      <div id="AppTitle">
-        <span>Killing Time App</span>
-      </div>
-
-      <header>
-        <Header />
-      </header>
-      <nav>
-        <Nav />
-      </nav>
-
-      <div id="AppContent">{children}</div>
+      <Header />
     </Container>
   );
 };
 
-export default Layout;
+export default Default;

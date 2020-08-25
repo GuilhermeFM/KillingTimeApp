@@ -18,13 +18,10 @@ export default createGlobalStyle`
 
     width: 100%;
     height: 100%;
-    min-width: 480;
-    min-height: 700px;
+    min-width: 360;
+    min-height: 440px;
+    overflow: auto;
 
-    /* Enable scroll when view is to long */
-    overflow-y: auto;
-
-    /* customize scrollbar */
     ::-webkit-scrollbar {
       width: 10px;
     }
@@ -49,9 +46,9 @@ export default createGlobalStyle`
     height: 100%;
     color: #000;
     background: #e9e9e9;
-    -webkit-font-smoothing: antialiased;
-
     overflow: hidden;
+
+    -webkit-font-smoothing: antialiased;
   }
 
   body, input, button {

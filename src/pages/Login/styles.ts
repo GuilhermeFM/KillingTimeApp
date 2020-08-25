@@ -1,138 +1,82 @@
 import styled from 'styled-components';
-import { shade } from 'polished';
 
-import logo from '../../assets/login-right-image.png';
+import background from '../../assets/background-light.jpg';
 
 export const Container = styled.div`
-  flex: 1;
-  max-width: 1000px;
+  height: 100%;
+  width: 100%;
+
+  background-image: url(${background});
+  background-size: contain;
 
   display: flex;
-  flex-direction: row;
+  flex-flow: column nowrap;
   justify-content: center;
+  align-items: center;
 
-  form {
+  > img {
+    margin-bottom: 3rem;
+  }
+
+  > p:not(:last-child) {
+    margin-bottom: 3rem;
+  }
+
+  > p:not(:first-child) {
+    margin-top: 3rem;
+  }
+
+  > form {
+    @media (max-width: 360px) {
+      width: 300px;
+    }
+
+    @media (min-width: 480px) {
+      width: 430px;
+    }
+
     display: flex;
-    flex-direction: column;
+    flex-flow: column nowrap;
 
-    width: 480px;
-    background: #fff;
-    padding: 60px;
-
-    h1 {
-      margin-bottom: 15px;
-      font-weight: bold;
-    }
-
-    h4 {
-      margin-bottom: 20px;
-      font-weight: 50;
-      color: #c9c9c9;
-    }
-
-    input {
-      padding: 15px;
-      border-radius: 10px;
-      border: 1px solid #eee;
-
-      & + input {
-        margin-top: 15px;
-      }
-
-      ::placeholder {
-        color: #c9c9c9;
-      }
-    }
-
-    > button {
-      padding: 10px;
-      background: #fff;
-      border-radius: 10px;
-
-      color: #fff;
+    > input[type='text'] {
+      padding: 1rem 1.5rem;
       border: none;
-      margin-top: 20px;
-      background-color: #6d2ecc;
-      transition: background-color 0.2s;
+      border-radius: 5px;
+
+      background-color: rgba(235, 237, 242, 0.4);
+      :not(:first-child) {
+        margin-top: 18px;
+      }
+    }
+
+    > input[type='button'] {
+      width: 180px;
+      align-self: center;
+      margin-top: 2rem;
+      padding: 1rem 1.5rem;
+
+      border: none;
+      border-radius: 5px;
+      background-color: #5d78ff;
+      color: #fff;
+
+      transition: all 0.3s ease;
 
       :hover {
-        background-color: ${shade(0.2, '#6d2ecc')};
+        border: none;
+        background-color: #3758ff;
+        box-shadow: 0px 9px 16px 0px rgba(93, 120, 255, 0.25);
       }
     }
 
-    div:nth-of-type(1) {
+    > div {
       display: flex;
-      flex-direction: row;
-      align-items: center;
+      flex-flow: row nowrap;
       justify-content: space-between;
 
-      margin: 20px 0 20px 0;
-
-      > span > a {
+      > a {
         text-decoration: none;
-        color: #6d2ecc;
-        font-size: 14px;
-        font-weight: bold;
-        transition: color 0.2s;
-
-        :hover {
-          color: ${shade(0.2, '#f4ede8')};
-        }
-      }
-    }
-
-    div:nth-of-type(2) {
-      display: flex;
-      flex-direction: column;
-
-      button {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-
-        padding: 10px;
-        background: #fff;
-        border-radius: 10px;
-
-        > img {
-          width: 24px;
-          height: 24px;
-          margin-right: 10px;
-        }
-      }
-
-      button#google {
-        margin-top: 20px;
-        color: #5880c2;
-        border: 1px solid #5880c2;
-        transition: border-color 0.2s;
-
-        :hover {
-          border-color: ${shade(0.2, '#f4ede8')};
-        }
-      }
-
-      button#facebook {
-        margin-top: 10px;
-        color: #4b6092;
-        border: 1px solid #4b6092;
-        transition: border-color 0.2s;
-
-        :hover {
-          border-color: ${shade(0.2, '#f4ede8')};
-        }
       }
     }
   }
-`;
-
-export const Background = styled.div`
-  flex: 1;
-
-  max-width: 480px;
-  max-height: 680px;
-
-  background: url(${logo}) no-repeat center;
-  background-size: cover;
 `;
