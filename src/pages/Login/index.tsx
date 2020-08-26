@@ -1,8 +1,6 @@
 import React from 'react';
 
-import Checkbox from '../../Components/Checkbox';
-
-import { Container } from './styles';
+import { Container, Input, Button, Checkbox } from './styles';
 
 import logo from '../../assets/logomarca.png';
 
@@ -13,15 +11,15 @@ const Login: React.FC = () => {
       <p>Sign In To Admin</p>
 
       <form>
-        <input type="text" placeholder="Email" />
-        <input type="text" placeholder="Password" />
+        <Input placeholder="Email" />
+        <Input placeholder="Password" />
 
         <div>
           <Checkbox>Remember me</Checkbox>
           <a href="/#">Forget Password</a>
         </div>
 
-        <input type="button" value="Sign In" />
+        <Button value="Sign In" />
       </form>
 
       <p>

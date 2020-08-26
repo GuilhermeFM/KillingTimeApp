@@ -2,6 +2,10 @@ import styled from 'styled-components';
 
 import background from '../../assets/background-light.jpg';
 
+import InputText from '../../Components/Forms/InputText';
+import InputButton from '../../Components/Forms/InputButton';
+import InputCheckbox from '../../Components/Forms/InputCheckbox';
+
 export const Container = styled.div`
   height: 100%;
   width: 100%;
@@ -38,38 +42,9 @@ export const Container = styled.div`
     display: flex;
     flex-flow: column nowrap;
 
-    > input[type='text'] {
-      padding: 1rem 1.5rem;
-      border: none;
-      border-radius: 5px;
-
-      background-color: rgba(235, 237, 242, 0.4);
-      :not(:first-child) {
-        margin-top: 18px;
-      }
-    }
-
-    > input[type='button'] {
-      width: 180px;
-      align-self: center;
-      margin-top: 2rem;
-      padding: 1rem 1.5rem;
-
-      border: none;
-      border-radius: 5px;
-      background-color: #5d78ff;
-      color: #fff;
-
-      transition: all 0.3s ease;
-
-      :hover {
-        border: none;
-        background-color: #3758ff;
-        box-shadow: 0px 9px 16px 0px rgba(93, 120, 255, 0.25);
-      }
-    }
-
     > div {
+      margin-top: 2rem;
+
       display: flex;
       flex-flow: row nowrap;
       justify-content: space-between;
@@ -80,3 +55,18 @@ export const Container = styled.div`
     }
   }
 `;
+
+export const Input = styled(InputText)`
+  background-color: rgba(235, 237, 242, 0.4);
+
+  :not(:first-child) {
+    margin-top: 18px;
+  }
+`;
+
+export const Button = styled(InputButton)`
+  align-self: center;
+  margin-top: 2rem;
+`;
+
+export const Checkbox = styled(InputCheckbox)``;
