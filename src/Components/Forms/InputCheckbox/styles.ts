@@ -12,7 +12,7 @@ export const Container = styled.label`
   cursor: pointer;
 
   > p {
-    margin-top: 2px;
+    margin-bottom: 2px;
   }
   :hover p {
     color: #ccc;
@@ -20,7 +20,7 @@ export const Container = styled.label`
   }
 
   :hover input ~ span {
-    background-color: #ccc;
+    background-color: #c3c3c3;
     transition: background-color 0.3s;
   }
 
@@ -33,7 +33,7 @@ export const Container = styled.label`
   }
 
   input:checked ~ span {
-    background-color: #6d2ecc;
+    background-color: #ccc;
     transition: background-color 0.3s;
   }
 

@@ -8,9 +8,10 @@ const Login: React.FC = () => {
   return (
     <Container>
       <img src={logo} alt="logo" />
-      <p>Sign In To Admin</p>
 
       <form>
+        <p>Sign In To Admin</p>
+
         <Input placeholder="Email" />
         <Input placeholder="Password" />
 
@@ -20,11 +21,12 @@ const Login: React.FC = () => {
         </div>
 
         <Button value="Sign In" />
-      </form>
 
-      <p>
-        Don&#39;t have an account yet? <a href="/#">Sign Up</a>
-      </p>
+        <p>
+          Don&#39;t have an account yet? &nbsp;&nbsp;
+          <a href="/#">Sign Up</a>
+        </p>
+      </form>
     </Container>
   );
 };

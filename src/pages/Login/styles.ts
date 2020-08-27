@@ -11,7 +11,6 @@ export const Container = styled.div`
   width: 100%;
 
   background-image: url(${background});
-  background-size: contain;
 
   display: flex;
   flex-flow: column nowrap;
@@ -20,14 +19,6 @@ export const Container = styled.div`
 
   > img {
     margin-bottom: 3rem;
-  }
-
-  > p:not(:last-child) {
-    margin-bottom: 3rem;
-  }
-
-  > p:not(:first-child) {
-    margin-top: 3rem;
   }
 
   > form {
@@ -42,6 +33,12 @@ export const Container = styled.div`
     display: flex;
     flex-flow: column nowrap;
 
+    > p:not(:last-child) {
+      margin-bottom: 3rem;
+      font-size: 24px;
+      align-self: center;
+    }
+
     > div {
       margin-top: 2rem;
 
@@ -50,7 +47,34 @@ export const Container = styled.div`
       justify-content: space-between;
 
       > a {
+        color: #c3c3c3;
+        font-size: 14px;
         text-decoration: none;
+        cursor: pointer;
+
+        transition: all 0.3s ease;
+
+        :hover {
+          color: #5d78ff;
+        }
+      }
+    }
+
+    > p:not(:first-child) {
+      align-self: center;
+      margin-top: 3rem;
+
+      > a {
+        color: #000;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+
+        transition: all 0.3s ease;
+
+        :hover {
+          color: #5d78ff;
+        }
       }
     }
   }
@@ -65,8 +89,16 @@ export const Input = styled(InputText)`
 `;
 
 export const Button = styled(InputButton)`
+  @media (max-width: 360px) {
+    width: 100%;
+  }
+
   align-self: center;
   margin-top: 2rem;
+
+  :hover {
+    box-shadow: 0px 9px 16px 0px rgba(93, 120, 255, 0.25);
+  }
 `;
 
 export const Checkbox = styled(InputCheckbox)``;

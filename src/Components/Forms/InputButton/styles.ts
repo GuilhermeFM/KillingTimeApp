@@ -14,6 +14,5 @@ export const Input = styled.input`
   :hover {
     border: none;
     background-color: #3758ff;
-    box-shadow: 0px 9px 16px 0px rgba(93, 120, 255, 0.25);
   }
 `;
