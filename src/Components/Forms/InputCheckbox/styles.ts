@@ -6,7 +6,6 @@ export const Container = styled.label`
   align-items: center;
   position: relative;
   padding-left: 30px;
-  font-size: 14px;
   color: #c3c3c3;
   user-select: none;
   cursor: pointer;

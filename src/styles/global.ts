@@ -2,6 +2,8 @@ import { createGlobalStyle } from 'styled-components';
 import { shade } from 'polished';
 
 export default createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap');
+
   * {
     margin: 0;
     padding: 0;
@@ -50,8 +52,9 @@ export default createGlobalStyle`
   }
 
   body, input, button {
-    font-family: Poppins, Helvetica, sans-serif;
-    font-size: 16px;
+    font-family: 'Poppins', Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 14px;
   }
 
   h1, h2, h3, h4, h5, h6, strong {

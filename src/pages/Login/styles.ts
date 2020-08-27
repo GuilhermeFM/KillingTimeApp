@@ -48,7 +48,6 @@ export const Container = styled.div`
 
       > a {
         color: #c3c3c3;
-        font-size: 14px;
         text-decoration: none;
         cursor: pointer;
 

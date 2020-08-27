@@ -12,8 +12,8 @@ const Login: React.FC = () => {
       <form>
         <p>Sign In To Admin</p>
 
-        <Input placeholder="Email" />
-        <Input placeholder="Password" />
+        <Input type="text" placeholder="Email" />
+        <Input type="password" placeholder="Password" />
 
         <div>
           <Checkbox>Remember me</Checkbox>
