@@ -1,10 +1,20 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import background from '../../assets/background-light.jpg';
 
 import InputText from '../../Components/Forms/InputText';
 import InputButton from '../../Components/Forms/InputButton';
 import InputCheckbox from '../../Components/Forms/InputCheckbox';
+
+const rotateTo90 = keyframes`
+  from {
+    transform: translateX(-350px);
+  },
+
+  to {
+    transform: translateX(0px);
+  }
+`;
 
 export const Container = styled.div`
   height: 100%;
@@ -13,7 +23,7 @@ export const Container = styled.div`
   background-image: url(${background});
 
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: column wrap;
   justify-content: center;
   align-items: center;
 
@@ -22,20 +32,26 @@ export const Container = styled.div`
   }
 
   > form {
-    @media (max-width: 360px) {
+    animation: ${rotateTo90} 1.5s forwards;
+
+    @media (min-width: 320px) {
+      width: 280px;
+    }
+
+    @media (min-width: 360px) {
       width: 300px;
     }
 
-    @media (min-width: 480px) {
-      width: 430px;
+    @media (min-width: 400px) {
+      width: 380px;
     }
 
     display: flex;
     flex-flow: column nowrap;
 
     > p:not(:last-child) {
-      margin-bottom: 3rem;
-      font-size: 24px;
+      margin-bottom: 2rem;
+      font-size: 20px;
       align-self: center;
     }
 
@@ -83,7 +99,7 @@ export const Input = styled(InputText)`
   background-color: rgba(235, 237, 242, 0.4);
 
   :not(:first-child) {
-    margin-top: 18px;
+    margin-top: 1rem;
   }
 `;
 

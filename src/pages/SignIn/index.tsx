@@ -1,10 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { Container, Input, Button, Checkbox } from './styles';
 
-import logo from '../../assets/logomarca.png';
+import logo from '../../assets/logo-2.png';
 
-const Login: React.FC = () => {
+const SignIn: React.FC = () => {
   return (
     <Container>
       <img src={logo} alt="logo" />
@@ -17,7 +18,7 @@ const Login: React.FC = () => {
 
         <div>
           <Checkbox>Remember me</Checkbox>
-          <a href="/#">Forget Password</a>
+          <Link to="/RecoverPassword">Forget Password</Link>
         </div>
 
         <Button value="Sign In" />
@@ -31,4 +32,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default SignIn;
