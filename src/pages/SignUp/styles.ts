@@ -23,7 +23,7 @@ export const Container = styled.div`
   background-image: url(${background});
 
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
 
@@ -85,8 +85,6 @@ export const Container = styled.div`
     }
 
     > div#controls {
-      margin-top: 1rem;
-
       display: flex;
       flex-flow: row wrap;
       justify-content: space-around;
