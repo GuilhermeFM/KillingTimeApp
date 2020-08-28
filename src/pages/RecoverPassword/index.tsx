@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import {
   Container,
@@ -30,7 +30,7 @@ const RecoverPassword: React.FC = () => {
 
         <p id="footer">
           Don&#39;t have an account yet? &nbsp;&nbsp;
-          <a href="/#">Sign Up</a>
+          <Link to="/SignUp">Sign Up</Link>
         </p>
       </form>
     </Container>

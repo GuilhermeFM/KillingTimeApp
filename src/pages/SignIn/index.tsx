@@ -25,7 +25,7 @@ const SignIn: React.FC = () => {
 
         <p>
           Don&#39;t have an account yet? &nbsp;&nbsp;
-          <a href="/#">Sign Up</a>
+          <Link to="/SignUp">Sign Up</Link>
         </p>
       </form>
     </Container>
