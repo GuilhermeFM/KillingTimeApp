@@ -3,8 +3,8 @@ import styled, { keyframes } from 'styled-components';
 import background from '../../assets/background-light.jpg';
 
 import InputText from '../../Components/Forms/InputText';
-import InputButton from '../../Components/Forms/InputButton';
 import InputCheckbox from '../../Components/Forms/InputCheckbox';
+import ButtonPrimaryElevated from '../../Components/Buttons/ButtonPrimary/Elevated';
 
 const rotateTo90 = keyframes`
   from {
@@ -55,7 +55,7 @@ export const Container = styled.div`
       align-self: center;
     }
 
-    > div {
+    > div#placeholder {
       margin-top: 2rem;
 
       display: flex;
@@ -96,24 +96,14 @@ export const Container = styled.div`
 `;
 
 export const Input = styled(InputText)`
-  background-color: rgba(235, 237, 242, 0.4);
-
-  :not(:first-child) {
+  & + :not(:first-child) {
     margin-top: 1rem;
   }
 `;
 
-export const Button = styled(InputButton)`
-  @media (max-width: 360px) {
-    width: 100%;
-  }
-
-  align-self: center;
+export const Button = styled(ButtonPrimaryElevated)`
   margin-top: 2rem;
-
-  :hover {
-    box-shadow: 0px 9px 16px 0px rgba(93, 120, 255, 0.25);
-  }
+  align-self: center;
 `;
 
 export const Checkbox = styled(InputCheckbox)``;

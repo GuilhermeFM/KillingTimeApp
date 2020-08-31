@@ -19,7 +19,7 @@ export default createGlobalStyle`
     width: 100%;
     height: 100%;
     min-width: 360;
-    min-height: 700px;
+    min-height: 800px;
     overflow: auto;
 
     ::-webkit-scrollbar {

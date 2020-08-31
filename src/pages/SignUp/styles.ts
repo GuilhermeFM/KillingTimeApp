@@ -3,8 +3,9 @@ import styled, { keyframes } from 'styled-components';
 import background from '../../assets/background-light.jpg';
 
 import InputText from '../../Components/Forms/InputText';
-import InputButton from '../../Components/Forms/InputButton';
 import InputCheckbox from '../../Components/Forms/InputCheckbox';
+import ButtonLightElevated from '../../Components/Buttons/ButtonLight/Elevated';
+import ButtonPrimaryElevated from '../../Components/Buttons/ButtonPrimary/Elevated';
 
 const rotateTo90 = keyframes`
   from {
@@ -61,6 +62,13 @@ export const Container = styled.div`
       margin-bottom: 2rem;
     }
 
+    > span {
+      color: #ff5555;
+      font-size: 12px;
+      margin-top: 10px;
+      margin-left: 5px;
+    }
+
     > div#terms {
       display: flex;
       flex-flow: row nowrap;
@@ -93,57 +101,17 @@ export const Container = styled.div`
 `;
 
 export const Input = styled(InputText)`
-  background-color: rgba(235, 237, 242, 0.4);
-
-  :not(:first-child) {
+  & + :not(:first-child) {
     margin-top: 1rem;
   }
 `;
 
-export const Button = styled(InputButton)`
-  @media (max-width: 360px) {
-    width: 100%;
-  }
-
-  align-self: center;
+export const ButtonSignUp = styled(ButtonPrimaryElevated)`
   margin-top: 2rem;
-
-  :hover {
-    box-shadow: 0px 9px 16px 0px rgba(93, 120, 255, 0.25);
-  }
 `;
 
-export const ButtonSignUp = styled(InputButton)`
-  @media (max-width: 360px) {
-    width: 100%;
-  }
-
-  width: 150px;
-  align-self: center;
+export const ButtonCancel = styled(ButtonLightElevated)`
   margin-top: 2rem;
-
-  :hover {
-    box-shadow: 0px 9px 16px 0px rgba(93, 120, 255, 0.25);
-  }
-`;
-
-export const ButtonCancel = styled(InputButton)`
-  @media (max-width: 360px) {
-    width: 100%;
-  }
-
-  width: 150px;
-  align-self: center;
-  margin-top: 2rem;
-
-  color: #282a3c;
-  background-color: transparent;
-  box-shadow: 0px 4px 16px 0px rgba(153, 153, 153, 0.15);
-
-  :hover {
-    background-color: transparent;
-    box-shadow: 0px 9px 16px 0px rgba(153, 153, 153, 0.25);
-  }
 `;
 
 export const Checkbox = styled(InputCheckbox)``;
