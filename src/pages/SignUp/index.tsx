@@ -1,7 +1,5 @@
 import React, { useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 
 import validate from '../../validations/SignUp';
@@ -9,6 +7,7 @@ import logo from '../../assets/logo-2.png';
 
 import {
   Container,
+  Form,
   Input,
   ButtonSignUp,
   ButtonCancel,
@@ -29,9 +28,8 @@ const SignUp: React.FC = () => {
 
   return (
     <Container>
-      <img src={logo} alt="logo" />
-
       <Form ref={formRef} onSubmit={handleSubmit}>
+        <img id="logo" src={logo} alt="logo" />
         <p id="title">Sign Up</p>
         <p id="description">Enter your details to create your account:</p>
 
@@ -44,12 +42,12 @@ const SignUp: React.FC = () => {
           placeholder="Confirm password"
         />
 
-        <div id="terms">
+        <div id="formextracontrols">
           <Checkbox>I Agree the</Checkbox>
           <a href="/#">terms and conditions.</a>
         </div>
 
-        <div id="controls">
+        <div id="formbuttons">
           <ButtonSignUp type="submit">Sign Up</ButtonSignUp>
           <ButtonCancel type="button" onClick={() => history.push('/')}>
             Cancel

@@ -2,8 +2,6 @@ import { createGlobalStyle } from 'styled-components';
 import { shade } from 'polished';
 
 export default createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap');
-
   * {
     margin: 0;
     padding: 0;
@@ -19,7 +17,7 @@ export default createGlobalStyle`
     width: 100%;
     height: 100%;
     min-width: 360;
-    min-height: 800px;
+    min-height: 730;
     overflow: auto;
 
     ::-webkit-scrollbar {

@@ -1,9 +1,8 @@
 import React, { useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-
-import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 
+import Form from '../../Components/Forms/Vertical';
 import validate from '../../validations/SignUp';
 import logo from '../../assets/logo-2.png';
 
@@ -22,22 +21,23 @@ const SignIn: React.FC = () => {
 
   return (
     <Container>
-      <img src={logo} alt="logo" />
-
       <Form ref={formRef} onSubmit={handleSubmit}>
-        <p>Sign In To Admin</p>
+        <img id="logo" src={logo} alt="logo" />
+        <p id="title">Sign In To Admin</p>
 
         <Input type="email" name="email" placeholder="Email" />
         <Input type="password" name="password" placeholder="Password" />
 
-        <div id="placeholder">
+        <div id="formextracontrols">
           <Checkbox>Remember me</Checkbox>
           <Link to="/RecoverPassword">Forget Password</Link>
         </div>
 
-        <Button type="submit">Sign In</Button>
+        <div id="formbuttons">
+          <Button type="submit">Sign In</Button>
+        </div>
 
-        <p>
+        <p id="footer">
           Don&#39;t have an account yet? &nbsp;&nbsp;
           <Link to="/SignUp">Sign Up</Link>
         </p>

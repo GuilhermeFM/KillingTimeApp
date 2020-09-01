@@ -1,18 +1,13 @@
 import React, { useRef, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-
-import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 
+import Form from '../../Components/Forms/Vertical';
+import Input from '../../Components/Inputs/InputText';
 import validate from '../../validations/RecoverPassword';
 import logo from '../../assets/logo-2.png';
 
-import {
-  Container,
-  Input,
-  ButtonRequestPassword,
-  ButtonCancel,
-} from './styles';
+import { Container, ButtonRequestPassword, ButtonCancel } from './styles';
 
 const RecoverPassword: React.FC = () => {
   const history = useHistory();
@@ -28,15 +23,14 @@ const RecoverPassword: React.FC = () => {
 
   return (
     <Container>
-      <img src={logo} alt="logo" />
-
       <Form ref={formRef} onSubmit={handleSubmit}>
+        <img id="logo" src={logo} alt="logo" />
         <p id="title">Forgotten Password ?</p>
         <p id="description">Enter your email to reset your password</p>
 
         <Input type="email" name="email" placeholder="Email" />
 
-        <div id="buttons">
+        <div id="formbuttons">
           <ButtonRequestPassword type="submit">Request</ButtonRequestPassword>
           <ButtonCancel type="button" onClick={() => history.push('/')}>
             Cancel
