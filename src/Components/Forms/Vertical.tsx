@@ -3,11 +3,13 @@ import { Form } from '@unform/web';
 
 const translateX = keyframes`
   from {
-    transform: translateX(-350px);
+    transform: translateX(-50px);
+    opacity: 0;
   },
 
   to {
     transform: translateX(0px);
+    opacity: 1;
   }
 `;
 

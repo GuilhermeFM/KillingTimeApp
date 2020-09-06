@@ -33,7 +33,7 @@ export const Form = styled(VerticalForm)`
 
     > a {
       margin-left: 4px;
-      margin-top: 1px;
+      margin-top: -2px;
       font-weight: 700;
       color: #74788d;
     }
