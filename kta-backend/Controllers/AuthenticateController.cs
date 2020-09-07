@@ -65,14 +65,10 @@ namespace kta.Controllers
                 SecurityAlgorithms.HmacSha256
             );
 
-            var JWTIssuer = _configuration["JWT:ValidIssuer"];
-            var JWTAudience = _configuration["JWT:ValidAudience"];
             var JWTExpires = DateTime.Now.AddHours(3);
 
             var JWTSecurityToken = new JwtSecurityToken
             (
-                issuer: JWTIssuer,
-                audience: JWTAudience,
                 expires: JWTExpires,
                 claims: JWTAuthClaims,
                 signingCredentials: JWTSigningCredential

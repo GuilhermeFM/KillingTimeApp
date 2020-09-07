@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  kta-api:
+    build: ./kta-backend
+    container_name: kta-api
+    ports:
+      - '80:80'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Container
+    networks:
+      - kta-network
+    depends_on:
+      - kta-mssql
+    command: dotnet kta-api.dll
+
+  kta-mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: kta-mssql
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=root#123456
+      - MSSQL_PID=Express
+    volumes:
+      - mssql:/var/opt/mssql
+    networks:
+      - kta-network
+
+volumes:
+  mssql:
+
+networks:
+  kta-network:
+    driver: bridge

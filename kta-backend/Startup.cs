@@ -15,9 +15,11 @@ namespace kta
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
         {
+            WebHostEnvironment = webHostEnvironment;
             Configuration = configuration;
         }
 
@@ -37,10 +39,12 @@ namespace kta
             });
 
             services.AddDbContext<KTADbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("ConnStr")
-                )
-            );
+            {
+                if (WebHostEnvironment.IsEnvironment("Container"))
+                    options.UseSqlServer(Configuration.GetConnectionString("ConnStrContainer"));
+                else
+                    options.UseSqlServer(Configuration.GetConnectionString("ConnStr"));
+            });
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<Authentication.KTADbContext>()
@@ -80,8 +84,6 @@ namespace kta
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 
