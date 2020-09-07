@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useField } from '@unform/core';
 
-import { Container } from './styles';
+import { Container, Checkbox } from './styles';
 
 interface InputCheckboxProps {
   className?: string;
@@ -14,7 +14,7 @@ const InputCheckbox: React.FC<InputCheckboxProps> = ({
   className,
 }) => {
   const inputRef = useRef(null);
-  const { fieldName, registerField } = useField(name);
+  const { registerField, fieldName, error } = useField(name);
 
   useEffect(() => {
     registerField({
@@ -25,10 +25,13 @@ const InputCheckbox: React.FC<InputCheckboxProps> = ({
   }, [fieldName, registerField]);
 
   return (
-    <Container className={className}>
-      <p>{children}</p>
-      <input type="checkbox" ref={inputRef} />
-      <span />
+    <Container>
+      <Checkbox className={className}>
+        <p>{children}</p>
+        <input type="checkbox" ref={inputRef} />
+        <span />
+      </Checkbox>
+      {error && <p>{error}</p>}
     </Container>
   );
 };

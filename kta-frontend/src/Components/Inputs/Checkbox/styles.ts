@@ -1,40 +1,53 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
-export const Container = styled.label`
+const fadeInOut = keyframes`
+  from {
+    opacity: 0;
+  },
+
+  to {
+    opacity: 1;
+  }
+`;
+
+export const Container = styled.div`
+  > p {
+    color: #ff5555;
+    margin-top: 5px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+`;
+
+export const Checkbox = styled.label`
   display: flex;
-  height: 20px;
   align-items: center;
+
+  height: 20px;
   position: relative;
   padding-left: 30px;
-  color: #c3c3c3;
+
   user-select: none;
   cursor: pointer;
 
-  :hover p {
-    color: #ccc;
-    transition: color 0.3s;
-  }
-
-  :hover input ~ span {
-    background-color: #c3c3c3;
-    transition: background-color 0.3s;
-  }
-
   input {
     position: absolute;
+
     opacity: 0;
-    cursor: pointer;
     height: 0;
     width: 0;
-  }
 
-  input:checked ~ span {
-    background-color: #ccc;
-    transition: background-color 0.3s;
-  }
+    cursor: pointer;
 
-  input:checked ~ span:after {
-    display: block;
+    :checked ~ span {
+      background-color: #5d78ff;
+
+      :after {
+        display: block;
+        animation: ${fadeInOut} 0.8s forwards;
+        transition: background-color 0.8s;
+      }
+    }
   }
 
   span {
@@ -50,16 +63,14 @@ export const Container = styled.label`
       content: '';
       position: absolute;
       display: none;
-    }
-  }
 
-  span:after {
-    left: 6px;
-    top: 4px;
-    width: 3px;
-    height: 6px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    transform: rotate(45deg);
+      left: 6px;
+      top: 4px;
+      width: 3px;
+      height: 6px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      transform: rotate(45deg);
+    }
   }
 `;

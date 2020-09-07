@@ -21,29 +21,11 @@ export const Container = styled.div`
 
 export const Form = styled(VerticalForm)`
   div#formextracontrols {
-    justify-content: flex-start;
-
-    label {
-      color: #74788d;
-
-      p {
-        color: #74788d;
-      }
-    }
-
     a {
-      margin-left: 4px;
-      margin-top: -1px;
-      font-weight: 700;
+      font-weight: 300;
       color: #74788d;
+      text-decoration: underline;
     }
-  }
-
-  p#formextracontrolsvalidation {
-    color: #ff5555;
-    margin-top: 5px;
-    font-size: 12px;
-    font-weight: 700;
   }
 `;
 

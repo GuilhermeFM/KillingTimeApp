@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
@@ -19,9 +19,7 @@ import {
 const SignUp: React.FC = () => {
   const history = useHistory();
   const { addToast } = useToast();
-
   const formRef = useRef<FormHandles>(null);
-  const [showAcceptTermsError, setShowAcceptTermsError] = useState(false);
 
   const handleSubmit = useCallback(
     async (data) => {
@@ -31,8 +29,6 @@ const SignUp: React.FC = () => {
       if (formRef.current) {
         formRef.current.setErrors(errors || {});
       }
-
-      setShowAcceptTermsError(!agreeToTerms);
 
       if (!errors && agreeToTerms) {
         try {
@@ -78,15 +74,9 @@ const SignUp: React.FC = () => {
         />
 
         <div id="formextracontrols">
-          <Checkbox name="agreeToTerms">I Agree the</Checkbox>
-          <a href="/#">terms and conditions.</a>
+          <Checkbox name="agreeToTerms">I Agree.</Checkbox>
+          <a href="/#">Terms and conditions</a>
         </div>
-
-        {showAcceptTermsError && (
-          <p id="formextracontrolsvalidation">
-            You need to agree with the terms.
-          </p>
-        )}
 
         <div id="formbuttons">
           <ButtonSignUp type="submit">Sign Up</ButtonSignUp>

@@ -16,6 +16,10 @@ const validate = async (data: object): Promise<Erros | undefined> => {
         [Yup.ref('password')],
         'Passwords must match.',
       ),
+      agreeToTerms: Yup.boolean().oneOf(
+        [true],
+        'Must Accept Terms and Conditions',
+      ),
     });
 
     await schema.validate(data, { abortEarly: false });
