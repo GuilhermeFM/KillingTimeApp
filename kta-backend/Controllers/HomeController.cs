@@ -11,13 +11,13 @@ namespace kta.Controllers
         [Route("/")]
         public IActionResult Index()
         {
-            return Ok(new Response { Status = "Success", Message = "Welcome to home" });
+            return Ok(new Response { Status = 200, Message = "Welcome to home" });
         }
 
         [Route("AboutMe")]
         public IActionResult AboutMe()
         {
-            return Ok(new Response { Status = "Success", Message = "My Infos" });
+            return Ok(new Response { Status = 200, Message = "My Infos" });
         }
     }
 }

@@ -61,7 +61,7 @@ namespace kta.Controllers
             var JWTAuthSigningKey = new SymmetricSecurityKey(JWTSecreteBytes);
             var JWTSigningCredential = new SigningCredentials
             (
-                JWTAuthSigningKey, 
+                JWTAuthSigningKey,
                 SecurityAlgorithms.HmacSha256
             );
 
@@ -86,9 +86,12 @@ namespace kta.Controllers
         {
             var user = await userManager.FindByNameAsync(model.Username);
             if (user != null)
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new Response { Status = "Error", Message = "User already exists!" }
+            {
+                return Ok
+                (
+                    new Response { Status = 403, Message = "User already exists!" }
                 );
+            }
 
             user = new User
             {
@@ -100,18 +103,17 @@ namespace kta.Controllers
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                return StatusCode
+                return Ok
                 (
-                    StatusCodes.Status500InternalServerError,
                     new Response
                     {
-                        Status = "Error",
+                        Status = 403,
                         Message = "User creation failed! Please check user details and try again."
                     }
                 );
             }
 
-            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+            return Ok(new Response { Status = 200, Message = "User created successfully!" });
         }
     }
 }
