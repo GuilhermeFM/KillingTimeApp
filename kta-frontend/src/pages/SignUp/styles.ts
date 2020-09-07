@@ -2,11 +2,11 @@ import styled from 'styled-components';
 
 import background from '../../assets/background-light.jpg';
 
-import VerticalForm from '../../Components/Forms/Vertical';
-import InputText from '../../Components/Inputs/InputText';
-import InputCheckbox from '../../Components/Inputs/Checkbox';
-import ButtonLightElevated from '../../Components/Buttons/ButtonLight/Elevated';
-import ButtonPrimaryElevated from '../../Components/Buttons/ButtonPrimary/Elevated';
+import VerticalForm from '../../components/Forms/Vertical';
+import InputText from '../../components/Inputs/InputText';
+import InputCheckbox from '../../components/Inputs/Checkbox';
+import ButtonLightElevated from '../../components/Buttons/ButtonLight/Elevated';
+import ButtonPrimaryElevated from '../../components/Buttons/ButtonPrimary/Elevated';
 
 export const Container = styled.div`
   height: 100%;
@@ -31,12 +31,19 @@ export const Form = styled(VerticalForm)`
       }
     }
 
-    > a {
+    a {
       margin-left: 4px;
-      margin-top: -2px;
+      margin-top: -1px;
       font-weight: 700;
       color: #74788d;
     }
+  }
+
+  p#formextracontrolsvalidation {
+    color: #ff5555;
+    margin-top: 5px;
+    font-size: 12px;
+    font-weight: 700;
   }
 `;
 

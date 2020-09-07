@@ -2,9 +2,9 @@ import styled from 'styled-components';
 
 import background from '../../assets/background-light.jpg';
 
-import InputText from '../../Components/Inputs/InputText';
-import InputCheckbox from '../../Components/Inputs/Checkbox';
-import ButtonPrimaryElevated from '../../Components/Buttons/ButtonPrimary/Elevated';
+import InputText from '../../components/Inputs/InputText';
+import InputCheckbox from '../../components/Inputs/Checkbox';
+import ButtonPrimaryElevated from '../../components/Buttons/ButtonPrimary/Elevated';
 
 export const Container = styled.div`
   height: 100%;

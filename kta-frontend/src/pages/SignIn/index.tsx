@@ -2,7 +2,7 @@ import React, { useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
-import Form from '../../Components/Forms/Vertical';
+import Form from '../../components/Forms/Vertical';
 import validate from '../../validations/SignIn';
 import { useAuth } from '../../hooks/auth';
 import logo from '../../assets/logo-2.png';

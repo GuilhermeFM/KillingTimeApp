@@ -2,8 +2,8 @@ import React, { useRef, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
-import Form from '../../Components/Forms/Vertical';
-import Input from '../../Components/Inputs/InputText';
+import Form from '../../components/Forms/Vertical';
+import Input from '../../components/Inputs/InputText';
 import validate from '../../validations/RecoverPassword';
 import logo from '../../assets/logo-2.png';
 

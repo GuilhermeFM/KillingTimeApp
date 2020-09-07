@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 import background from '../../assets/background-light.jpg';
-import ButtonLightElevated from '../../Components/Buttons/ButtonLight/Elevated';
-import ButtonPrimaryElevated from '../../Components/Buttons/ButtonPrimary/Elevated';
+import ButtonLightElevated from '../../components/Buttons/ButtonLight/Elevated';
+import ButtonPrimaryElevated from '../../components/Buttons/ButtonPrimary/Elevated';
 
 export const Container = styled.div`
   height: 100%;

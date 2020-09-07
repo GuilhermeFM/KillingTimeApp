@@ -10,9 +10,6 @@ export const Container = styled.label`
   user-select: none;
   cursor: pointer;
 
-  > p {
-    margin-bottom: 2px;
-  }
   :hover p {
     color: #ccc;
     transition: color 0.3s;
