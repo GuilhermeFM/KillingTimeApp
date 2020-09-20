@@ -1,16 +1,19 @@
 ﻿using kta.Authentication;
 using kta.Model;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace kta.Controllers
@@ -20,17 +23,11 @@ namespace kta.Controllers
     public class AuthenticateController : Controller
     {
         private readonly UserManager<User> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthenticateController(
-            UserManager<User> userManager,
-            RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration
-        )
+        public AuthenticateController(UserManager<User> userManager, IConfiguration configuration)
         {
             this.userManager = userManager;
-            this.roleManager = roleManager;
             this._configuration = configuration;
         }
 
@@ -40,11 +37,21 @@ namespace kta.Controllers
         {
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
-                return Unauthorized();
+            {
+                return Ok
+                (
+                    new Response { Status = 401, Message = "User or Password are invalid." }
+                );
+            }
 
             var validPassword = await userManager.CheckPasswordAsync(user, model.Password);
             if (!validPassword)
-                return Unauthorized();
+            {
+                return Ok
+                (
+                    new Response { Status = 401, Message = "User or Password are invalid." }
+                );
+            }
 
             var JWTAuthClaims = (await userManager.GetRolesAsync(user))
                 .Select(userRole =>
@@ -77,38 +84,43 @@ namespace kta.Controllers
             var token = new JwtSecurityTokenHandler()
                 .WriteToken(JWTSecurityToken);
 
-            return Ok(new { token, expiration = JWTSecurityToken.ValidTo });
+            return Ok
+            (
+                new Response<dynamic> { Status = 200, Data = token }
+            );
         }
 
         [HttpPost]
         [Route("SignUp")]
         public async Task<IActionResult> SignUp([FromBody] RegisterModel model)
         {
-            var user = await userManager.FindByNameAsync(model.Username);
+            var user = await userManager.FindByEmailAsync(model.Email);
             if (user != null)
             {
                 return Ok
                 (
-                    new Response { Status = 403, Message = "User already exists!" }
+                    new Response { Status = 403, Message = "The provided email is already in use." }
                 );
             }
 
             user = new User
             {
                 Email = model.Email,
-                UserName = model.Username,
+                UserName = model.Email,
+                Fullname = model.Fullname,
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
+                var errors = result.Errors.FirstOrDefault().Description;
                 return Ok
                 (
                     new Response
                     {
                         Status = 403,
-                        Message = "User creation failed! Please check user details and try again."
+                        Message = string.Join("\n", errors)
                     }
                 );
             }

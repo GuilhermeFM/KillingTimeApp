@@ -46,9 +46,20 @@ namespace kta
                     options.UseSqlServer(Configuration.GetConnectionString("ConnStr"));
             });
 
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<Authentication.KTADbContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+
+                options.User.AllowedUserNameCharacters =
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+            })
+            .AddEntityFrameworkStores<Authentication.KTADbContext>()
+            .AddDefaultTokenProviders();
 
             var JWTValidAudience = Configuration["JWT:ValidAudience"];
             var JWTValidIssuer = Configuration["JWT:ValidIssuer"];

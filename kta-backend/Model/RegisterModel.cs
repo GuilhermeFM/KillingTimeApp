@@ -4,8 +4,8 @@ namespace kta.Model
 {
     public class RegisterModel
     {
-        [Required(ErrorMessage = "User Name is required")]
-        public string Username { get; set; }
+        [Required(ErrorMessage = "Fullname is required")]
+        public string Fullname { get; set; }
 
         [EmailAddress]
         [Required(ErrorMessage = "Email is required")]

@@ -5,8 +5,10 @@ namespace kta.Authentication
 {
     public class KTADbContext : IdentityDbContext<User>
     {
-        public KTADbContext(DbContextOptions<KTADbContext> options) : base(options) {
+        public KTADbContext(DbContextOptions<KTADbContext> options) : base(options) 
+        {
         }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
