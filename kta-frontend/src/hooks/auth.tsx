@@ -1,4 +1,5 @@
 import React, { createContext, useState, useCallback, useContext } from 'react';
+import IAPIError from '../errors/APIError';
 import api from '../services/api';
 
 interface IAuthState {
@@ -42,14 +43,20 @@ export const AuthProvider: React.FC = ({ children }) => {
     async (email: string, password: string, rememberMe: boolean) => {
       const requestParams = { email, password };
       const response = await api.post('authenticate/SignIn', requestParams);
+      const { status } = response.data;
 
-      const { token } = response.data;
+      if (status === 200) {
+        const { data } = response.data;
 
-      if (rememberMe) {
-        localStorage.setItem('@kta-token', JSON.stringify(token));
+        if (rememberMe) {
+          localStorage.setItem('@kta-token', JSON.stringify(data));
+        }
+
+        setAuthState({ token: data });
+      } else {
+        const { message } = response.data;
+        throw new IAPIError(message);
       }
-
-      setAuthState({ token });
     },
     [],
   );

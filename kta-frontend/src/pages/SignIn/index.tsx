@@ -4,6 +4,8 @@ import { FormHandles } from '@unform/core';
 
 import Form from '../../components/Forms/Vertical';
 import validate from '../../validations/SignIn';
+import IAPIError from '../../errors/APIError';
+import { useToast } from '../../hooks/toast';
 import { useAuth } from '../../hooks/auth';
 import logo from '../../assets/logo-2.png';
 
@@ -11,6 +13,7 @@ import { Container, Input, Button, Checkbox } from './styles';
 
 const SignIn: React.FC = () => {
   const { signIn } = useAuth();
+  const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = useCallback(
@@ -23,10 +26,25 @@ const SignIn: React.FC = () => {
 
       const { email, password, rememberMe } = data;
       if (!errors) {
-        await signIn(email, password, rememberMe);
+        try {
+          await signIn(email, password, rememberMe);
+        } catch (err) {
+          if (err instanceof IAPIError) {
+            addToast({
+              type: 'error',
+              title: 'Not Authorized',
+              content: (err as IAPIError).message,
+            });
+          } else {
+            addToast({
+              type: 'error',
+              title: 'Internal Server Error',
+            });
+          }
+        }
       }
     },
-    [signIn],
+    [addToast, signIn],
   );
 
   return (

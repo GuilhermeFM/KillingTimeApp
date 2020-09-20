@@ -32,7 +32,7 @@ const SignUp: React.FC = () => {
 
       if (!errors && agreeToTerms) {
         try {
-          const requestParams = { username: fullname, email, password };
+          const requestParams = { fullname, email, password };
           const response = await api.post('authenticate/SignUp', requestParams);
           const { status, message } = response.data;
 

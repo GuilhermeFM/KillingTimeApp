@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useTransition } from 'react-spring';
-import { FiAlertCircle, FiXCircle } from 'react-icons/fi';
+import { FiXCircle } from 'react-icons/fi';
 
 import { ToastContainer, ToastContent } from './styles';
 
@@ -26,7 +26,6 @@ const Content: React.FC<{ style: object; message: IToastMessage }> = ({
 
   return (
     <ToastContent style={style} type={message.type}>
-      <FiAlertCircle size={20} />
       <div>
         <strong>{message.title}</strong>
         {message.content && <p>{message.content}</p>}
