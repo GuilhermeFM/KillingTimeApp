@@ -1,11 +1,11 @@
-version: '3'
+version: "3"
 
 services:
   kta-api:
     build: ./kta-backend
     container_name: kta-api
     ports:
-      - '80:80'
+      - 8080:8080
     environment:
       - ASPNETCORE_ENVIRONMENT=Container
     networks:
