@@ -32,7 +32,7 @@ namespace kta
                 options.AddDefaultPolicy(builder =>
                 {
                     builder
-                        .AllowAnyOrigin()
+                        .WithOrigins("http://localhost:3000")
                         .AllowAnyMethod()
                         .AllowAnyHeader();
                 });
@@ -40,10 +40,7 @@ namespace kta
 
             services.AddDbContext<KTADbContext>(options =>
             {
-                if (WebHostEnvironment.IsEnvironment("Container"))
-                    options.UseSqlServer(Configuration.GetConnectionString("ConnStrContainer"));
-                else
-                    options.UseSqlServer(Configuration.GetConnectionString("ConnStr"));
+                options.UseSqlServer(Configuration.GetConnectionString("ConnStr"));
             });
 
             services.AddIdentity<User, IdentityRole>(options =>
@@ -58,7 +55,7 @@ namespace kta
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             })
-            .AddEntityFrameworkStores<Authentication.KTADbContext>()
+            .AddEntityFrameworkStores<KTADbContext>()
             .AddDefaultTokenProviders();
 
             var JWTValidAudience = Configuration["JWT:ValidAudience"];
