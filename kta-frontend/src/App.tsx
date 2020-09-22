@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import GlobalStyle from './styles/global';
 import lightDark from './themes/lightDark';
 import { AuthProvider } from './hooks/auth';
-import {ToastProvider} from './hooks/toast';
+import { ToastProvider } from './hooks/toast';
 import Routes from './routes';
 
 const App: React.FC = () => {

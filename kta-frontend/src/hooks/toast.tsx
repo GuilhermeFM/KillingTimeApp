@@ -23,11 +23,11 @@ export const ToastProvider: React.FC = ({ children }) => {
   const [toastMessages, setToastMessage] = useState<IToastMessage[]>([]);
 
   const addToast = useCallback(({ type, title, content }) => {
-    setToastMessage((state) => [...state, { id: v4(), type, title, content }]);
+    setToastMessage(state => [...state, { id: v4(), type, title, content }]);
   }, []);
 
-  const removeToast = useCallback((id) => {
-    setToastMessage((state) => state.filter((message) => message.id !== id));
+  const removeToast = useCallback(id => {
+    setToastMessage(state => state.filter(message => message.id !== id));
   }, []);
 
   return (

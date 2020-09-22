@@ -40,7 +40,7 @@ const Content: React.FC<{ style: object; message: IToastMessage }> = ({
 const Container: React.FC<{ messages: IToastMessage[] }> = ({ messages }) => {
   const messagesWithTransitions = useTransition(
     messages,
-    (message) => message.id,
+    message => message.id,
     {
       from: { right: '-120%', opacity: '0' },
       enter: { right: '0%', opacity: '1' },

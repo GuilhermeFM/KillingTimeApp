@@ -30,6 +30,12 @@
     "yup": "^0.29.3"
   },
   "scripts": {
+    "fix": "yarn fix:eslint && yarn fix:prettier",
+    "fix:eslint": "eslint --fix \"**/*.*\"",
+    "fix:prettier": "prettier --write \"**/*.*\"",
+    "lint": "yarn lint:eslint && yarn lint:prettier",
+    "lint:eslint": "eslint \"**/*.*\"",
+    "lint:prettier": "prettier --check \"**/*.*\"",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

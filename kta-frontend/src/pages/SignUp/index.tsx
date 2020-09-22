@@ -22,7 +22,7 @@ const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = useCallback(
-    async (data) => {
+    async data => {
       const errors = await validate(data);
       const { fullname, email, password, agreeToTerms } = data;
 

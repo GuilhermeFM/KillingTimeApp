@@ -13,7 +13,7 @@ const RecoverPassword: React.FC = () => {
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = useCallback(async (data) => {
+  const handleSubmit = useCallback(async data => {
     const errors = await validate(data);
 
     if (formRef.current) {

@@ -2,3 +2,9 @@
 node_modules
 build
 react-app-env.d.ts
+*.jpg
+*.txt
+*.html
+*.json
+*.png
+*.lock
