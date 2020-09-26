@@ -1,2 +1,4 @@
 - Review/Improve Toast styles to match app color scheme.
+
 - Implement Password Recovery.
+- Implement Email Confirmation
