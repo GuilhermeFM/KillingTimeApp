@@ -1,4 +1,6 @@
 using kta.Authentication;
+using kta.email;
+using kta.email.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -84,6 +86,9 @@ namespace kta
                     IssuerSigningKey = JWTSymetricSecurityKey
                 };
             });
+
+            services.AddTransient<IEmail, Email>();
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

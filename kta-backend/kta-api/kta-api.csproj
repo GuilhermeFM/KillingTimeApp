@@ -25,5 +25,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\kta-email\kta-email.csproj" />
+  </ItemGroup>
+
 
 </Project>

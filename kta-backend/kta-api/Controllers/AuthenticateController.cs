@@ -1,4 +1,5 @@
 ﻿using kta.Authentication;
+using kta.email;
 using kta.Model;
 
 using Microsoft.AspNetCore.Identity;
@@ -20,13 +21,17 @@ namespace kta.Controllers
     [ApiController]
     public class AuthenticateController : Controller
     {
-        private readonly UserManager<User> userManager;
-        private readonly IConfiguration _configuration;
+        private readonly IEmail email;
+        private readonly IConfiguration configuration;
 
-        public AuthenticateController(UserManager<User> userManager, IConfiguration configuration)
+        private readonly UserManager<User> userManager;
+
+        public AuthenticateController(UserManager<User> userManager, IEmail email, IConfiguration configuration)
         {
+            this.email = email;
+            this.configuration = configuration;
+
             this.userManager = userManager;
-            this._configuration = configuration;
         }
 
         [HttpPost]
@@ -61,7 +66,7 @@ namespace kta.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 });
 
-            var JWTSecrete = _configuration["JWT:Secret"];
+            var JWTSecrete = configuration["JWT:Secret"];
             var JWTSecreteBytes = Encoding.UTF8.GetBytes(JWTSecrete);
             var JWTAuthSigningKey = new SymmetricSecurityKey(JWTSecreteBytes);
             var JWTSigningCredential = new SigningCredentials
@@ -124,6 +129,37 @@ namespace kta.Controllers
             }
 
             return Ok(new Response { Status = 200, Message = "User created successfully!" });
+        }
+
+        [HttpGet]
+        [Route("SendResetPasswordLink")]
+        public async Task<IActionResult> SendResetPasswordLink(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return Ok
+                (
+                    new Response { Status = 403, Message = "The provided email are not registered." }
+                );
+            }
+
+            var passwordResettoken = await userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink = Url.Action("ResetPassword", "Authenticate", new { token = passwordResettoken }, protocol: HttpContext.Request.Scheme);
+            await this.email.SendEmailAsync(user.Email, "Account password reset link", resetLink);
+
+            return Ok
+            (
+                new Response { Status = 200 }
+            );
+        }
+
+        [HttpGet]
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(string token)
+        {
+            return Ok(new Response { Status = 200 });
         }
     }
 }
