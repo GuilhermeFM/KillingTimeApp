@@ -2,7 +2,7 @@ import React, { useRef, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
-import api from '../../services/api';
+import { signUp } from '../../services/api';
 import { useToast } from '../../hooks/toast';
 import validate from '../../validations/SignUp';
 import logo from '../../assets/logo-2.png';
@@ -24,34 +24,18 @@ const SignUp: React.FC = () => {
   const handleSubmit = useCallback(
     async data => {
       const errors = await validate(data);
-      const { fullname, email, password, agreeToTerms } = data;
+      const { fullname, email, password } = data;
 
-      if (formRef.current) {
-        formRef.current.setErrors(errors || {});
+      if (errors) {
+        formRef.current?.setErrors(errors);
+        return;
       }
 
-      if (!errors && agreeToTerms) {
-        try {
-          const requestParams = { fullname, email, password };
-          const response = await api.post('authenticate/SignUp', requestParams);
-          const { status, message } = response.data;
-
-          if (status === 200) {
-            history.push('/');
-          }
-
-          addToast({
-            title: status !== 200 ? 'Error' : 'Success',
-            type: status !== 200 ? 'error' : 'success',
-            content: message,
-          });
-        } catch (err) {
-          addToast({
-            title: 'Error',
-            type: 'error',
-            content: 'Internal server error',
-          });
-        }
+      try {
+        await signUp({ fullname, email, password });
+        history.push('/');
+      } catch (err) {
+        addToast({ title: 'Error', type: 'error', content: err.message });
       }
     },
     [addToast, history],
