@@ -21,10 +21,15 @@ namespace kta.Controllers
     [ApiController]
     public class AuthenticateController : Controller
     {
+        #region Deps
+
         private readonly IEmail email;
         private readonly IConfiguration configuration;
-
         private readonly UserManager<User> userManager;
+
+        #endregion
+
+        #region Constructors
 
         public AuthenticateController(UserManager<User> userManager, IEmail email, IConfiguration configuration)
         {
@@ -33,6 +38,8 @@ namespace kta.Controllers
 
             this.userManager = userManager;
         }
+
+        #endregion
 
         [HttpPost]
         [Route("SignIn")]
