@@ -58,3 +58,64 @@ export const signIn = async (params: SignInParams): Promise<string> => {
     );
   }
 };
+
+interface ISendResetPasswordLink {
+  remoteViewPath: string;
+  email: string;
+}
+
+export const sendResetPasswordLink = async (
+  params: ISendResetPasswordLink,
+): Promise<string> => {
+  try {
+    const response = await api.post(
+      'authenticate/SendResetPasswordLink',
+      params,
+    );
+
+    const { status } = response.data;
+
+    if (status !== 200) {
+      const { message } = response.data;
+      throw new IAPIError(message);
+    }
+
+    const { data } = response.data;
+    return data;
+  } catch (err) {
+    if (err instanceof IAPIError) {
+      throw err;
+    }
+
+    throw new IAPIError(
+      'A error has occurred while processing your request. Try again later',
+    );
+  }
+};
+
+interface IResetPassword {
+  email: string;
+  password: string;
+  token: string;
+}
+
+export const resetPassword = async (params: IResetPassword): Promise<void> => {
+  try {
+    const response = await api.post('authenticate/ResetPassword', params);
+
+    const { status } = response.data;
+
+    if (status !== 200) {
+      const { message } = response.data;
+      throw new IAPIError(message);
+    }
+  } catch (err) {
+    if (err instanceof IAPIError) {
+      throw err;
+    }
+
+    throw new IAPIError(
+      'A error has occurred while processing your request. Try again later',
+    );
+  }
+};

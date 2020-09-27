@@ -2,6 +2,8 @@ import React, { useRef, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
+import { useToast } from '../../hooks/toast';
+import * as service from '../../services/api';
 import Form from '../../components/Forms/Vertical';
 import Input from '../../components/Inputs/InputText';
 import validate from '../../validations/RecoverPassword';
@@ -11,15 +13,40 @@ import { Container, ButtonRequestPassword, ButtonCancel } from './styles';
 
 const RecoverPassword: React.FC = () => {
   const history = useHistory();
+  const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = useCallback(async data => {
-    const errors = await validate(data);
+  const handleSubmit = useCallback(
+    async data => {
+      const errors = await validate(data);
 
-    if (formRef.current) {
-      formRef.current.setErrors(errors || {});
-    }
-  }, []);
+      if (errors) {
+        formRef.current?.setErrors(errors);
+        return;
+      }
+
+      try {
+        const { email } = data;
+        const { protocol, hostname, port } = window.location;
+
+        await service.sendResetPasswordLink({
+          email,
+          remoteViewPath: `${protocol}//${hostname}:${port}/ResetPassword`,
+        });
+
+        history.push('/');
+
+        addToast({
+          title: 'Success',
+          type: 'success',
+          content: 'Password reset link sent.',
+        });
+      } catch (err) {
+        addToast({ title: 'Error', type: 'error', content: err.message });
+      }
+    },
+    [addToast, history],
+  );
 
   return (
     <Container>

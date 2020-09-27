@@ -1,7 +1,7 @@
 ﻿using kta.Authentication;
 using kta.email;
 using kta.Model;
-
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -138,11 +138,11 @@ namespace kta.Controllers
             return Ok(new Response { Status = 200, Message = "User created successfully!" });
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("SendResetPasswordLink")]
-        public async Task<IActionResult> SendResetPasswordLink(string email)
+        public async Task<IActionResult> SendResetPasswordLink([FromBody] SendResetPasswordLinkModel model)
         {
-            var user = await userManager.FindByEmailAsync(email);
+            var user = await userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
             {
@@ -152,8 +152,9 @@ namespace kta.Controllers
                 );
             }
 
-            var passwordResettoken = await userManager.GeneratePasswordResetTokenAsync(user);
-            var resetLink = Url.Action("ResetPassword", "Authenticate", new { token = passwordResettoken }, protocol: HttpContext.Request.Scheme);
+            var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+            var passwordResetTokenBytes = Encoding.UTF8.GetBytes(passwordResetToken);
+            var resetLink = string.Format("{0}?token={1}&email={2}", model.RemoteViewPath, Base64UrlTextEncoder.Encode(passwordResetTokenBytes), model.Email);
             await this.email.SendEmailAsync(user.Email, "Account password reset link", resetLink);
 
             return Ok
@@ -162,11 +163,27 @@ namespace kta.Controllers
             );
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("ResetPassword")]
-        public async Task<IActionResult> ResetPassword(string token)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
-            return Ok(new Response { Status = 200 });
+            var user = await userManager.FindByNameAsync(model.Email);
+            
+            var token = Base64UrlEncoder.Decode(model.Token);
+            var result = await userManager.ResetPasswordAsync(user, token, model.Password);
+
+            if (!result.Succeeded)
+            {
+                return Ok
+                (
+                    new Response { Status = 403, Message = result.Errors.FirstOrDefault().Description }
+                );
+            }
+
+            return Ok
+            (
+                new Response { Status = 200, Message = "Password reset successful" }
+            );
         }
     }
 }
