@@ -4,6 +4,6 @@
     {
         public string Email { get; set; }
 
-        public string RemoteViewPath { get; set; }
+        public string RemotePasswordChangePath { get; set; }
     }
 }

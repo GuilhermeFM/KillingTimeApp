@@ -1,6 +1,7 @@
 using kta.Authentication;
 using kta.email;
 using kta.email.Models;
+using kta_core.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -56,6 +57,8 @@ namespace kta
 
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+
+                options.SignIn.RequireConfirmedEmail = true;
             })
             .AddEntityFrameworkStores<KTADbContext>()
             .AddDefaultTokenProviders();

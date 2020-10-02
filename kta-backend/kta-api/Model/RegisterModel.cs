@@ -13,5 +13,7 @@ namespace kta.Model
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
+
+        public string RemoteSuccessConfirmationPath { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace kta.Model
+﻿namespace kta_core.Models.Payloads
 {
-    public class ResetPasswordModel
+    public class PayloadResetPassword
     {
         public string Email { get; set; }
 
