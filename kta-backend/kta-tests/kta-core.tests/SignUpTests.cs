@@ -13,15 +13,13 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace kta_api.tests
+namespace kta_core.tests
 {
     public class SignUpTests
     {
         #region Mocks
 
-        private Mock<IUserStore<User>> _userStoreMock;
         private Mock<UserManager<User>> _userManagerMock;
-        private Mock<AuthenticateServiceSettings> _authenticateServiceSettingsMock;
 
         #endregion
 
@@ -30,12 +28,15 @@ namespace kta_api.tests
         [SetUp]
         public void Setup()
         {
-            _userStoreMock = new Mock<IUserStore<User>>();
-            _userManagerMock = new Mock<UserManager<User>>(_userStoreMock.Object, null, null, null, null, null, null, null, null);
-            _authenticateServiceSettingsMock = new Mock<AuthenticateServiceSettings>();
+            var _userStore = Mock.Of<IUserStore<User>>();
+
+            _userManagerMock = new Mock<UserManager<User>>(_userStore, null, null, null, null, null, null, null, null);
 
             var serviceCollection = new ServiceCollection()
-                .AddTransient(provider => new AuthenticateService(_authenticateServiceSettingsMock.Object, _userManagerMock.Object));
+                .AddTransient(provider => new AuthenticateService(
+                    new AuthenticateServiceSettings { JWTSecret = Guid.NewGuid().ToString() },
+                    _userManagerMock.Object)
+                );
 
             _serviceProvider = serviceCollection.BuildServiceProvider();
         }

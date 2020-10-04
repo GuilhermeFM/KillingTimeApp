@@ -2,5 +2,6 @@
 {
     public class AuthenticateServiceSettings
     {
+        public string JWTSecret { get; set; }
     }
 }
