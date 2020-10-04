@@ -73,7 +73,7 @@ namespace kta_core.tests
             var payload = await authenticateService.SignUpAsync(fullname, email, password);
             Assert.IsFalse(string.IsNullOrEmpty(payload), "Should have return a payload hash");
 
-            var expectedPayload = new PayloadConfirmEmail { EmailAddress = email, Token = emailConfirmationToken };
+            var expectedPayload = new PayloadEmail { EmailAddress = email, Token = emailConfirmationToken };
             var expectedPayloadJson = JsonConvert.SerializeObject(expectedPayload);
             var expectedPayloadJsonBytes = Encoding.UTF8.GetBytes(expectedPayloadJson);
             var expectedPayloadJsonBase64 = Base64UrlTextEncoder.Encode(expectedPayloadJsonBytes);

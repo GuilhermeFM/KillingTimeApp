@@ -1,4 +1,5 @@
-﻿using kta_core.Models;
+﻿using kta.email;
+using kta_core.Models;
 using kta_core.Models.Payloads;
 using kta_core.Models.Settings;
 
@@ -21,8 +22,8 @@ namespace kta_core.Services
     {
         #region Deps
 
-        private readonly AuthenticateServiceSettings settings;
-        private readonly UserManager<User> userManager;
+        private readonly AuthenticateServiceSettings _settings;
+        private readonly UserManager<User> _userManager;
 
         #endregion
 
@@ -30,15 +31,15 @@ namespace kta_core.Services
 
         public AuthenticateService(AuthenticateServiceSettings settings, UserManager<User> userManager)
         {
-            this.settings = settings;
-            this.userManager = userManager;
+            this._settings = settings;
+            this._userManager = userManager;
         }
 
         #endregion
 
         public async Task<string> SignUpAsync(string fullname, string email, string password)
         {
-            var existingUser = await userManager.FindByEmailAsync(email);
+            var existingUser = await _userManager.FindByEmailAsync(email);
             if (existingUser != null)
             {
                 throw new Exception("User already exists");
@@ -53,15 +54,15 @@ namespace kta_core.Services
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
 
-            var result = await userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(user, password);
             if (!result.Succeeded)
             {
                 throw new Exception("User creating failed");
             }
 
-            var confirmationEmailToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var payload = new PayloadConfirmEmail { Token = confirmationEmailToken, EmailAddress = user.Email };
+            var payload = new PayloadEmail { Token = confirmationEmailToken, EmailAddress = user.Email };
             var payloadJson = JsonConvert.SerializeObject(payload);
             var payloadJsonBytes = Encoding.UTF8.GetBytes(payloadJson);
             var payloadJsonBase64 = Base64UrlTextEncoder.Encode(payloadJsonBytes);
@@ -71,25 +72,25 @@ namespace kta_core.Services
 
         public async Task<string> SignInAsync(string email, string password)
         {
-            var user = await userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
                 throw new Exception("User or Password are invalid.");
             }
 
-            var validPassword = await userManager.CheckPasswordAsync(user, password);
+            var validPassword = await _userManager.CheckPasswordAsync(user, password);
             if (!validPassword)
             {
                 throw new Exception("User or Password are invalid.");
             }
 
-            var isEmailConfirmed = await userManager.IsEmailConfirmedAsync(user);
+            var isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
             if (!isEmailConfirmed)
             {
                 throw new Exception("The email need to be confirmed.");
             }
 
-            var userRoles = await userManager.GetRolesAsync(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
 
             var JWTAuthClaims = userRoles.Select(userRole =>
                 new Claim(ClaimTypes.Role, userRole)
@@ -100,7 +101,7 @@ namespace kta_core.Services
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             });
 
-            var JWTSecrete = settings.JWTSecret;
+            var JWTSecrete = _settings.JWTSecret;
             var JWTSecreteBytes = Encoding.UTF8.GetBytes(JWTSecrete);
             var JWTAuthSigningKey = new SymmetricSecurityKey(JWTSecreteBytes);
             var JWTSigningCredential = new SigningCredentials
@@ -122,6 +123,30 @@ namespace kta_core.Services
                 .WriteToken(JWTSecurityToken);
 
             return token;
+        }
+
+        public async Task<string> CreateResetPasswordTokenAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                throw new Exception("The provided email are not registered.");
+            }
+
+            var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var payload = new PayloadEmail
+            {
+                EmailAddress = email,
+                Token = passwordResetToken
+            };
+
+            var payloadJson = JsonConvert.SerializeObject(payload);
+            var payloadJsonBytes = Encoding.UTF8.GetBytes(payloadJson);
+            var payloadBase64 = Base64UrlTextEncoder.Encode(payloadJsonBytes);
+
+            return payloadBase64;
         }
     }
 }
