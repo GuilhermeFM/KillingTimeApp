@@ -148,5 +148,24 @@ namespace kta_core.Services
 
             return payloadBase64;
         }
+
+        public async Task ResetPasswordAsync(string password, string payload)
+        {
+            var jsonBytes = Base64UrlTextEncoder.Decode(payload);
+            var json = Encoding.UTF8.GetString(jsonBytes);
+
+            var payloadResetPassword = JsonConvert.DeserializeObject<PayloadEmail>(json);
+            var user = await _userManager.FindByEmailAsync(payloadResetPassword.EmailAddress);
+            if (user == null)
+            {
+                throw new Exception("Invalid Token");
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, payloadResetPassword.Token, password);
+            if (!result.Succeeded)
+            {
+                throw new Exception("Invalid Token");
+            }
+        }
     }
 }
