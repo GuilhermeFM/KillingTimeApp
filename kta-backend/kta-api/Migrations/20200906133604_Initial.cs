@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace kta.Migrations
+namespace kta_api.Migrations
 {
     public partial class Initial : Migration
     {

@@ -1,4 +1,4 @@
-﻿using kta.email.Models;
+﻿using kta_api.email.Models;
 
 using Microsoft.Extensions.Options;
 
@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
-namespace kta.email
+namespace kta_api.email
 {
     public class Email : IEmail
     {

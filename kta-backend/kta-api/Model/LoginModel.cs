@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace kta.Model
+namespace kta_api.Model
 {
     public class LoginModel
     {

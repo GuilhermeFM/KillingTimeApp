@@ -5,7 +5,7 @@ using kta_core.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-
+using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -32,11 +32,13 @@ namespace kta_core.tests
 
             _userManagerMock = new Mock<UserManager<User>>(_userStore, null, null, null, null, null, null, null, null);
 
+            var options = Options.Create(new AuthenticateServiceSettings
+            {
+                Secret = Guid.NewGuid().ToString()
+            });
+
             var serviceCollection = new ServiceCollection()
-                .AddTransient(provider => new AuthenticateService(
-                    new AuthenticateServiceSettings { JWTSecret = Guid.NewGuid().ToString() },
-                    _userManagerMock.Object)
-                );
+                .AddTransient(provider => new AuthenticateService(options, _userManagerMock.Object));
 
             _serviceProvider = serviceCollection.BuildServiceProvider();
         }

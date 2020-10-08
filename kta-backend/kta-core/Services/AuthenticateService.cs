@@ -1,10 +1,11 @@
-﻿using kta.email;
+﻿using kta_api.email;
 using kta_core.Models;
 using kta_core.Models.Payloads;
 using kta_core.Models.Settings;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
@@ -29,9 +30,9 @@ namespace kta_core.Services
 
         #region Constructors
 
-        public AuthenticateService(AuthenticateServiceSettings settings, UserManager<User> userManager)
+        public AuthenticateService(IOptions<AuthenticateServiceSettings> settings, UserManager<User> userManager)
         {
-            this._settings = settings;
+            this._settings = settings.Value;
             this._userManager = userManager;
         }
 
@@ -101,7 +102,7 @@ namespace kta_core.Services
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             });
 
-            var JWTSecrete = _settings.JWTSecret;
+            var JWTSecrete = _settings.Secret;
             var JWTSecreteBytes = Encoding.UTF8.GetBytes(JWTSecrete);
             var JWTAuthSigningKey = new SymmetricSecurityKey(JWTSecreteBytes);
             var JWTSigningCredential = new SigningCredentials
