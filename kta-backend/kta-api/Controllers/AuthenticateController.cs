@@ -1,4 +1,5 @@
 ﻿using kta_api.Model;
+using kta_core._Exceptions;
 using kta_core.Services;
 
 using Microsoft.AspNetCore.Mvc;
@@ -35,9 +36,13 @@ namespace kta_api.Controllers
                 var token = await _authenticateService.SignInAsync(model.Email, model.Password);
                 return Ok(new Response<dynamic> { Status = 200, Data = token });
             }
-            catch (Exception e)
+            catch (Exception e) when (e is InvalidUserException || e is InvalidPasswordException || e is EmailNotConfirmedException)
             {
-                return Ok(new Response<string> { Status = 200, Message = e.Message });
+                return Ok(new Response { Status = 200, Message = e.Message });
+            }
+            catch
+            {
+                return Ok(new Response { Status = 500, Message = "Internal Server Error." });
             }
         }
 

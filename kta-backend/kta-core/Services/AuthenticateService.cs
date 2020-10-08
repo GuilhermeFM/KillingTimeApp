@@ -1,4 +1,5 @@
 ﻿using kta_api.email;
+using kta_core._Exceptions;
 using kta_core.Models;
 using kta_core.Models.Payloads;
 using kta_core.Models.Settings;
@@ -76,19 +77,19 @@ namespace kta_core.Services
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                throw new Exception("User or Password are invalid.");
+                throw new InvalidUserException("User or Password are invalid.");
             }
 
             var validPassword = await _userManager.CheckPasswordAsync(user, password);
             if (!validPassword)
             {
-                throw new Exception("User or Password are invalid.");
+                throw new InvalidPasswordException("User or Password are invalid.");
             }
 
             var isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
             if (!isEmailConfirmed)
             {
-                throw new Exception("The email need to be confirmed.");
+                throw new EmailNotConfirmedException("The email need to be confirmed.");
             }
 
             var userRoles = await _userManager.GetRolesAsync(user);

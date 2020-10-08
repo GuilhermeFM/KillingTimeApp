@@ -32,13 +32,11 @@ namespace kta_core.tests
 
             _userManagerMock = new Mock<UserManager<User>>(_userStore, null, null, null, null, null, null, null, null);
 
-            var options = Options.Create(new AuthenticateServiceSettings
-            {
-                Secret = Guid.NewGuid().ToString()
-            });
+            var authenticateServiceSettings = new AuthenticateServiceSettings { Secret = Guid.NewGuid().ToString() };
+            var optionsAuthenticateServiceSettings = Options.Create(authenticateServiceSettings);
 
             var serviceCollection = new ServiceCollection()
-                .AddTransient(provider => new AuthenticateService(options, _userManagerMock.Object));
+                .AddTransient(provider => new AuthenticateService(optionsAuthenticateServiceSettings, _userManagerMock.Object));
 
             _serviceProvider = serviceCollection.BuildServiceProvider();
         }

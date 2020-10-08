@@ -1,4 +1,5 @@
-﻿using kta_core.Models;
+﻿using kta_core._Exceptions;
+using kta_core.Models;
 using kta_core.Models.Settings;
 using kta_core.Services;
 using Microsoft.AspNetCore.Identity;
@@ -29,13 +30,11 @@ namespace kta_core.tests
 
             _userManagerMock = new Mock<UserManager<User>>(_userStore, null, null, null, null, null, null, null, null);
 
-            var options = Options.Create(new AuthenticateServiceSettings
-            {
-                Secret = Guid.NewGuid().ToString()
-            });
+            var authenticateServiceSettings = new AuthenticateServiceSettings { Secret = Guid.NewGuid().ToString() };
+            var optionsAuthenticateServiceSettings = Options.Create(authenticateServiceSettings);
 
             var serviceCollection = new ServiceCollection()
-                .AddTransient(provider => new AuthenticateService(options, _userManagerMock.Object));
+                .AddTransient(provider => new AuthenticateService(optionsAuthenticateServiceSettings, _userManagerMock.Object));
 
             _serviceProvider = serviceCollection.BuildServiceProvider();
         }
@@ -91,14 +90,14 @@ namespace kta_core.tests
 
             var authenticateService = _serviceProvider.GetService<AuthenticateService>();
 
-            var exception = Assert.ThrowsAsync<Exception>
+            var exception = Assert.ThrowsAsync<InvalidUserException>
             (
                 async () =>
                 {
                     await authenticateService.SignInAsync(user.Email, password);
                 },
 
-                "Should have throw exception"
+                "Should have throw InvalidUserException"
             );
 
             Assert.That(exception.Message == "User or Password are invalid.",
@@ -130,14 +129,14 @@ namespace kta_core.tests
 
             var authenticateService = _serviceProvider.GetService<AuthenticateService>();
 
-            var exception = Assert.ThrowsAsync<Exception>
+            var exception = Assert.ThrowsAsync<InvalidPasswordException>
             (
                 async () =>
                 {
                     await authenticateService.SignInAsync(user.Email, password);
                 },
 
-                "Should have throw exception"
+                "Should have throw InvalidPasswordException"
             );
 
             Assert.That(exception.Message == "User or Password are invalid.",
@@ -169,14 +168,14 @@ namespace kta_core.tests
 
             var authenticateService = _serviceProvider.GetService<AuthenticateService>();
 
-            var exception = Assert.ThrowsAsync<Exception>
+            var exception = Assert.ThrowsAsync<EmailNotConfirmedException>
             (
                 async () =>
                 {
                     await authenticateService.SignInAsync(user.Email, password);
                 },
 
-                "Should have throw exception"
+                "Should have throw EmailNotConfirmedException"
             );
 
             Assert.That(exception.Message == "The email need to be confirmed.",
