@@ -62,6 +62,13 @@ namespace kta_core.tests
                 .ReturnsAsync(new List<string> { "User" });
 
             var authenticateService = _serviceProvider.GetService<AuthenticateService>();
+
+            Assert.DoesNotThrowAsync
+            (
+                async () => await authenticateService.SignInAsync(user.Email, password),
+                "Should not throw Exceptions"
+            );
+
             var token = await authenticateService.SignInAsync(user.Email, password);
             Assert.IsFalse(string.IsNullOrEmpty(token), "Token should be generated");
         }
@@ -75,18 +82,6 @@ namespace kta_core.tests
             _userManagerMock
                 .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(default(User));
-
-            _userManagerMock
-                .Setup(x => x.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(false);
-
-            _userManagerMock
-                .Setup(x => x.CheckPasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
-                .ReturnsAsync(true);
-
-            _userManagerMock
-                .Setup(x => x.GetRolesAsync(It.IsAny<User>()))
-                .ReturnsAsync(new List<string> { "User" });
 
             var authenticateService = _serviceProvider.GetService<AuthenticateService>();
 
@@ -116,16 +111,8 @@ namespace kta_core.tests
                 .ReturnsAsync(user);
 
             _userManagerMock
-                .Setup(x => x.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(false);
-
-            _userManagerMock
                 .Setup(x => x.CheckPasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(false);
-
-            _userManagerMock
-                .Setup(x => x.GetRolesAsync(It.IsAny<User>()))
-                .ReturnsAsync(new List<string> { "User" });
 
             var authenticateService = _serviceProvider.GetService<AuthenticateService>();
 
@@ -155,16 +142,12 @@ namespace kta_core.tests
                 .ReturnsAsync(user);
 
             _userManagerMock
-                .Setup(x => x.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(false);
-
-            _userManagerMock
                 .Setup(x => x.CheckPasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(true);
 
             _userManagerMock
-                .Setup(x => x.GetRolesAsync(It.IsAny<User>()))
-                .ReturnsAsync(new List<string> { "User" });
+                .Setup(x => x.IsEmailConfirmedAsync(It.IsAny<User>()))
+                .ReturnsAsync(false);
 
             var authenticateService = _serviceProvider.GetService<AuthenticateService>();
 

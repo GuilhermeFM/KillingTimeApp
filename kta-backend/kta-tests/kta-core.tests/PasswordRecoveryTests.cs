@@ -1,4 +1,5 @@
-﻿using kta_core.Models;
+﻿using kta_core._Exceptions;
+using kta_core.Models;
 using kta_core.Models.Payloads;
 using kta_core.Models.Settings;
 using kta_core.Services;
@@ -62,6 +63,13 @@ namespace kta_core.tests
                 .ReturnsAsync(passwordResetTokenMock);
 
             var authenticateService = _serviceProvider.GetService<AuthenticateService>();
+
+            Assert.DoesNotThrowAsync
+            (
+                async () => await authenticateService.CreateResetPasswordTokenAsync(user.Email), 
+                "Should not throw Exception"
+            );
+
             var payload = await authenticateService.CreateResetPasswordTokenAsync(user.Email);
 
             var expectedPayload = new PayloadEmail { EmailAddress = user.Email, Token = passwordResetTokenMock };
@@ -88,16 +96,12 @@ namespace kta_core.tests
                 .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(default(User));
 
-            _userManagerMock
-                .Setup(x => x.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
-                .ReturnsAsync(passwordResetTokenMock);
-
             var authenticateService = _serviceProvider.GetService<AuthenticateService>();
 
-            var exception = Assert.ThrowsAsync<Exception>
+            var exception = Assert.ThrowsAsync<InvalidUserException>
             (
                 async () => await authenticateService.CreateResetPasswordTokenAsync(user.Email),
-                "CreateResetPasswordTokenAsync should have thrown Exception"
+                "CreateResetPasswordTokenAsync should have thrown InvalidUserException"
             );
 
             Assert.That(exception.Message == "The provided email are not registered.",
@@ -175,7 +179,6 @@ namespace kta_core.tests
                 .Setup(x => x.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
                 .ReturnsAsync(passwordResetTokenMock);
 
-
             var authenticateService = _serviceProvider.GetService<AuthenticateService>();
 
             var payload = default(string);
@@ -196,13 +199,13 @@ namespace kta_core.tests
                 .Setup(x => x.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);
 
-            var exception = Assert.ThrowsAsync<Exception>
+            var invalidUserException = Assert.ThrowsAsync<InvalidUserException>
             (
                 async () => await authenticateService.ResetPasswordAsync(newPassword, payload),
-                "ResetPasswordAsync should have throw Exception"
+                "ResetPasswordAsync should have throw InvalidUserException"
             );
 
-            Assert.That(exception.Message == "Invalid Token", "Exception message should have been 'Invalid Token'");
+            Assert.That(invalidUserException.Message == "Invalid Token.", "Exception message should have been 'Invalid Token.'");
 
             _userManagerMock
                 .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
@@ -212,13 +215,13 @@ namespace kta_core.tests
                 .Setup(x => x.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Failed());
 
-            exception = Assert.ThrowsAsync<Exception>
+            var invalidTokenException = Assert.ThrowsAsync<InvalidTokenException>
             (
                 async () => await authenticateService.ResetPasswordAsync(newPassword, payload),
-                "ResetPasswordAsync should have throw Exception"
+                "ResetPasswordAsync should have throw InvalidTokenException"
             );
 
-            Assert.That(exception.Message == "Invalid Token", "Exception message should have been 'Invalid Token'");
+            Assert.That(invalidTokenException.Message == "Error while reseting password.", "Exception message should have been 'Error while reseting password.'");
         }
     }
 }

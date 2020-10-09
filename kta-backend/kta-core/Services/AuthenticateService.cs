@@ -1,5 +1,4 @@
-﻿using kta_api.email;
-using kta_core._Exceptions;
+﻿using kta_core._Exceptions;
 using kta_core.Models;
 using kta_core.Models.Payloads;
 using kta_core.Models.Settings;
@@ -41,12 +40,6 @@ namespace kta_core.Services
 
         public async Task<string> SignUpAsync(string fullname, string email, string password)
         {
-            var existingUser = await _userManager.FindByEmailAsync(email);
-            if (existingUser != null)
-            {
-                throw new Exception("User already exists");
-            }
-
             var user = new User
             {
                 Fullname = fullname,
@@ -59,7 +52,15 @@ namespace kta_core.Services
             var result = await _userManager.CreateAsync(user, password);
             if (!result.Succeeded)
             {
-                throw new Exception("User creating failed");
+                var error = result.Errors.First();
+
+                if (error.Code == nameof(IdentityErrorDescriber.DuplicateEmail))
+                    throw new UserSignUpException(error, "Email already registered.");
+
+                if (error.Code == nameof(IdentityErrorDescriber.PasswordTooShort))
+                    throw new UserSignUpException(error, "Password needs to be at least 6 character long.");
+
+                throw new UserSignUpException(error, "Failed to create user.");
             }
 
             var confirmationEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -92,9 +93,7 @@ namespace kta_core.Services
                 throw new EmailNotConfirmedException("The email need to be confirmed.");
             }
 
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            var JWTAuthClaims = userRoles.Select(userRole =>
+            var JWTAuthClaims = (await _userManager.GetRolesAsync(user)).Select(userRole =>
                 new Claim(ClaimTypes.Role, userRole)
             )
             .Concat(new List<Claim>
@@ -133,7 +132,7 @@ namespace kta_core.Services
 
             if (user == null)
             {
-                throw new Exception("The provided email are not registered.");
+                throw new InvalidUserException("The provided email are not registered.");
             }
 
             var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -160,13 +159,28 @@ namespace kta_core.Services
             var user = await _userManager.FindByEmailAsync(payloadResetPassword.EmailAddress);
             if (user == null)
             {
-                throw new Exception("Invalid Token");
+                throw new InvalidUserException("Invalid Token.");
             }
 
             var result = await _userManager.ResetPasswordAsync(user, payloadResetPassword.Token, password);
             if (!result.Succeeded)
             {
-                throw new Exception("Invalid Token");
+                throw new InvalidTokenException("Error while reseting password.");
+            }
+        }
+
+        public async Task ConfirmEmail(string email, string token)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new InvalidUserException("Invalid Token.");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+            {
+                throw new InvalidTokenException("Invalid Token.");
             }
         }
     }

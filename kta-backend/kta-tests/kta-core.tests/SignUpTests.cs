@@ -1,3 +1,4 @@
+using kta_core._Exceptions;
 using kta_core.Models;
 using kta_core.Models.Payloads;
 using kta_core.Models.Settings;
@@ -10,6 +11,7 @@ using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,13 +52,8 @@ namespace kta_core.tests
             var emailConfirmationToken = string.Format("{0:X}", $"{fullname}{email}".GetHashCode());
 
             _userManagerMock
-                .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync(default(User));
-
-            _userManagerMock
                 .Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);
-
 
             _userManagerMock
                 .Setup(x => x.GenerateEmailConfirmationTokenAsync(It.IsAny<User>()))
@@ -88,25 +85,45 @@ namespace kta_core.tests
             var email = "JohnDoe@example.com";
             var password = Guid.NewGuid().ToString();
 
-            _userManagerMock
-                .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync(new User());
+            var duplicatedUser = new IdentityError { Code = nameof(IdentityErrorDescriber.DuplicateEmail) };
 
             _userManagerMock
                 .Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
-                .ReturnsAsync(IdentityResult.Success);
-
-            _userManagerMock
-                .Setup(x => x.GenerateEmailConfirmationTokenAsync(It.IsAny<User>()))
-                .ReturnsAsync(string.Format("{0:X}", $"{fullname}{email}".GetHashCode()));
+                .ReturnsAsync(IdentityResult.Failed(duplicatedUser));
 
             var authenticateService = _serviceProvider.GetService<AuthenticateService>();
 
-            var exception = Assert.ThrowsAsync<Exception>(
-                async () => await authenticateService.SignUpAsync(fullname, email, password)
+            var exception = Assert.ThrowsAsync<UserSignUpException>(
+                async () => await authenticateService.SignUpAsync(fullname, email, password),
+                "Should have throw 'UserSignUpException'"
             );
 
-            Assert.That(exception.Message == "User already exists", "Should have throw Exception with message 'User already exists'");
+            Assert.That(exception.Message == "Email already registered.", "Exception message should be 'Email already registered.'");
+            Assert.That(exception.Error.Code == duplicatedUser.Code, $"Error should be '{nameof(IdentityErrorDescriber.DuplicateEmail)}'");
+        }
+
+        [Test]
+        public void SignUpWithInvalidPassword()
+        {
+            var fullname = "John Doe";
+            var email = "JohnDoe@example.com";
+            var password = Guid.NewGuid().ToString();
+
+            var invalidPassword = new IdentityError { Code = nameof(IdentityErrorDescriber.PasswordTooShort) };
+
+            _userManagerMock
+                .Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Failed(invalidPassword));
+
+            var authenticateService = _serviceProvider.GetService<AuthenticateService>();
+
+            var exception = Assert.ThrowsAsync<UserSignUpException>(
+                async () => await authenticateService.SignUpAsync(fullname, email, password),
+                "Should have throw 'UserCreationException'"
+            );
+
+            Assert.That(exception.Message == "Password needs to be at least 6 character long.", "Exception message should be 'Password needs to be at least 6 character long.'");
+            Assert.That(exception.Error.Code == invalidPassword.Code, $"Should have throw Exception with code '{invalidPassword.Code}'");
         }
     }
 }

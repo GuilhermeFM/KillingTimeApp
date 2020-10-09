@@ -1,9 +1,11 @@
-﻿using kta_api.Model;
+﻿using kta_api.email;
+using kta_api.Model;
 using kta_core._Exceptions;
 using kta_core.Services;
-
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace kta_api.Controllers
@@ -15,14 +17,16 @@ namespace kta_api.Controllers
         #region Deps
 
         private AuthenticateService _authenticateService;
+        private IEmail _email;
 
         #endregion
 
         #region Constructors
 
-        public AuthenticateController(AuthenticateService authenticateService)
+        public AuthenticateController(AuthenticateService authenticateService, IEmail email)
         {
             _authenticateService = authenticateService;
+            _email = email;
         }
 
         #endregion
@@ -34,11 +38,13 @@ namespace kta_api.Controllers
             try
             {
                 var token = await _authenticateService.SignInAsync(model.Email, model.Password);
-                return Ok(new Response<dynamic> { Status = 200, Data = token });
+                var response = new Response<dynamic> { Status = 200, Data = token };
+
+                return Ok(response);
             }
             catch (Exception e) when (e is InvalidUserException || e is InvalidPasswordException || e is EmailNotConfirmedException)
             {
-                return Ok(new Response { Status = 200, Message = e.Message });
+                return Ok(new Response { Status = 401, Message = e.Message });
             }
             catch
             {
@@ -46,142 +52,96 @@ namespace kta_api.Controllers
             }
         }
 
-        //[HttpPost]
-        //[Route("SignUp")]
-        //public async Task<IActionResult> SignUp([FromBody] RegisterModel model)
-        //{
-        //    //var user = await userManager.FindByEmailAsync(model.Email);
-        //    //if (user != null)
-        //    //{
-        //    //    return Ok
-        //    //    (
-        //    //        new Response { Status = 403, Message = "The provided email is already in use." }
-        //    //    );
-        //    //}
+        [HttpPost]
+        [Route("SignUp")]
+        public async Task<IActionResult> SignUp([FromBody] RegisterModel model)
+        {
+            try
+            {
+                var payloadJsonBase64 = await _authenticateService.SignUpAsync(model.Fullname, model.Email, model.Password);
+                var emailConfirmationLink = $"{model.RemoteSuccessConfirmationPath}?payload={payloadJsonBase64}";
 
-        //    //user = new User
-        //    //{
-        //    //    Email = model.Email,
-        //    //    UserName = model.Email,
-        //    //    Fullname = model.Fullname,
-        //    //    SecurityStamp = Guid.NewGuid().ToString(),
-        //    //};
+                await _email.SendEmailAsync(model.Email, "Email confirmation link", emailConfirmationLink);
+                var response = new Response { Status = 200, Message = "A confirmation email has been sent to your address." };
 
-        //    //var result = await userManager.CreateAsync(user, model.Password);
-        //    //if (!result.Succeeded)
-        //    //{
-        //    //    var errors = result.Errors.FirstOrDefault().Description;
-        //    //    return Ok
-        //    //    (
-        //    //        new Response
-        //    //        {
-        //    //            Status = 403,
-        //    //            Message = string.Join("\n", errors)
-        //    //        }
-        //    //    );
-        //    //}
+                return Ok(response);
+            }
+            catch (UserSignUpException e)
+            {
+                return Ok(new Response { Status = 403, Message = e.Error.Description });
+            }
+            catch
+            {
+                return Ok(new Response { Status = 500, Message = "Internal Server Error." });
+            }
+        }
 
-        //    //var confirmationEmailToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        [HttpPost]
+        [Route("SendResetPasswordLink")]
+        public async Task<IActionResult> SendResetPasswordLink([FromBody] SendResetPasswordLinkModel model)
+        {
+            try
+            {
+                var payloadBase64 = await _authenticateService.CreateResetPasswordTokenAsync(model.Email);
+                var resetLink = $"{model.RemotePasswordChangePath}?payload={payloadBase64}";
 
-        //    //var payload = new PayloadConfirmEmail { Token = confirmationEmailToken, EmailAddress = model.Email };
-        //    //var payloadJson = JsonConvert.SerializeObject(payload);
-        //    //var payloadJsonBytes = Encoding.UTF8.GetBytes(payloadJson);
-        //    //var payloadJsonBase64 = Base64UrlTextEncoder.Encode(payloadJsonBytes);
+                await _email.SendEmailAsync(model.Email, "Account password reset link", resetLink);
+                var response = new Response { Status = 200 };
 
-        //    //var emailConfirmationLink = $"{model.RemoteSuccessConfirmationPath}?payload={payloadJsonBase64}";
-        //    //await this.email.SendEmailAsync(user.Email, "Email confirmation link", emailConfirmationLink);
+                return Ok(response);
+            }
+            catch (InvalidUserException e)
+            {
+                return Ok(new Response { Status = 403, Message = e.Message });
+            }
+            catch
+            {
+                return Ok(new Response { Status = 500, Message = "Internal Server Error." });
+            }
+        }
 
-        //    return Ok(new Response { Status = 200, Message = "A confirmation email has been sent to your address." });
-        //}
+        [HttpPost]
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] string password, string payload)
+        {
+            try
+            {
+                await _authenticateService.ResetPasswordAsync(password, payload);
+                var response = new Response { Status = 200, Message = "Password reset successful" };
 
-        ////[HttpPost]
-        ////[Route("SendResetPasswordLink")]
-        ////public async Task<IActionResult> SendResetPasswordLink([FromBody] SendResetPasswordLinkModel model)
-        ////{
-        ////    var user = await userManager.FindByEmailAsync(model.Email);
+                return Ok(response);
+            }
+            catch (Exception e) when (e is InvalidUserException || e is InvalidTokenException)
+            {
+                return Ok(new Response { Status = 403, Message = e.Message });
+            }
+            catch
+            {
+                return Ok(new Response { Status = 500, Message = "Internal Server Error." });
+            }
+        }
 
-        ////    if (user == null)
-        ////    {
-        ////        return Ok
-        ////        (
-        ////            new Response { Status = 403, Message = "The provided email are not registered." }
-        ////        );
-        ////    }
+        [HttpPost]
+        [Route("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromBody] string email, string payload)
+        {
+            try
+            {
+                var tokenBytes = Base64UrlTextEncoder.Decode(payload);
+                var token = Encoding.UTF8.GetString(tokenBytes);
+                await _authenticateService.ConfirmEmail(email, token);
 
-        ////    var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
-
-        ////    var payload = new PayloadConfirmEmail { Token = passwordResetToken, EmailAddress = model.Email };
-        ////    var payloadJson = JsonConvert.SerializeObject(payload);
-        ////    var payloadJsonBytes = Encoding.UTF8.GetBytes(payloadJson);
-        ////    var payloadBase64 = Base64UrlTextEncoder.Encode(payloadJsonBytes);
-
-        ////    var resetLink = $"{model.RemotePasswordChangePath}?payload={payloadBase64}";
-        ////    await this.email.SendEmailAsync(user.Email, "Account password reset link", resetLink);
-
-        ////    return Ok
-        ////    (
-        ////        new Response { Status = 200 }
-        ////    );
-        ////}
-
-        //[HttpPost]
-        //[Route("ResetPassword")]
-        //public async Task<IActionResult> ResetPassword([FromBody] string payload)
-        //{
-        //    //var payloadJsonBytes = Base64UrlTextEncoder.Decode(payload);
-        //    //var payloadJson = Encoding.UTF8.GetString(payloadJsonBytes);
-        //    //var  = JsonConvert.DeserializeObject<PayloadResetPassword>(payloadJson);
-
-
-        //    //var user = await userManager.FindByNameAsync(model.Email);
-
-        //    //var token = Base64UrlEncoder.Decode(model.Token);
-        //    //var result = await userManager.ResetPasswordAsync(user, token, model.Password);
-
-        //    //if (!result.Succeeded)
-        //    //{
-        //    //    return Ok
-        //    //    (
-        //    //        new Response { Status = 403, Message = result.Errors.FirstOrDefault().Description }
-        //    //    );
-        //    //}
-
-        //    return Ok
-        //    (
-        //        new Response { Status = 200, Message = "Password reset successful" }
-        //    );
-        //}
-
-        ////[HttpPost]
-        ////[Route("ConfirmEmail")]
-        ////public async Task<IActionResult> ConfirmEmail([FromBody] string payload)
-        ////{
-        ////    var payloadJsonBytes = Base64UrlTextEncoder.Decode(model.Payload);
-        ////    var payloadJson = Encoding.UTF8.GetString(payloadJsonBytes);
-        ////    var paylaod = JsonConvert.DeserializeObject<PayloadConfirmEmail>(payloadJson);
-
-        ////    var user = await userManager.FindByEmailAsync(paylaod.EmailAddress);
-        ////    if (user == null)
-        ////    {
-        ////        return Ok
-        ////        (
-        ////            new Response { Status = 403, Message = "User not found." }
-        ////        );
-        ////    }
-
-        ////    var result = await userManager.ConfirmEmailAsync(user, paylaod.Token);
-        ////    if (!result.Succeeded)
-        ////    {
-        ////        return Ok
-        ////        (
-        ////            new Response { Status = 403, Message = result.Errors.FirstOrDefault().Description }
-        ////        );
-        ////    }
-
-        ////    return Ok
-        ////    (
-        ////        new Response { Status = 200, Message = "Email confirmation Succeeded." }
-        ////    );
-        ////}
+                var response = new Response { Status = 200, Message = "Email confirmation success." };
+                return Ok(response);
+            }
+            catch (Exception e) when (e is InvalidUserException || e is InvalidTokenException)
+            {
+                return Ok(new Response { Status = 403, Message = e.Message });
+            }
+            catch (Exception e)
+            {
+                return Ok(new Response { Status = 500, Message = "Internal Server Error." });
+            }
+        }
     }
 }
