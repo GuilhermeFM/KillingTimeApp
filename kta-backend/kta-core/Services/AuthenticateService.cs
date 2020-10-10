@@ -1,13 +1,9 @@
 ﻿using kta_core._Exceptions;
 using kta_core.Models;
-using kta_core.Models.Payloads;
 using kta_core.Models.Settings;
-
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 
 using System;
 using System.Collections.Generic;
@@ -65,12 +61,7 @@ namespace kta_core.Services
 
             var confirmationEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var payload = new PayloadEmail { Token = confirmationEmailToken, EmailAddress = user.Email };
-            var payloadJson = JsonConvert.SerializeObject(payload);
-            var payloadJsonBytes = Encoding.UTF8.GetBytes(payloadJson);
-            var payloadJsonBase64 = Base64UrlTextEncoder.Encode(payloadJsonBytes);
-
-            return payloadJsonBase64;
+            return confirmationEmailToken;
         }
 
         public async Task<string> SignInAsync(string email, string password)
@@ -137,35 +128,28 @@ namespace kta_core.Services
 
             var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var payload = new PayloadEmail
-            {
-                EmailAddress = email,
-                Token = passwordResetToken
-            };
-
-            var payloadJson = JsonConvert.SerializeObject(payload);
-            var payloadJsonBytes = Encoding.UTF8.GetBytes(payloadJson);
-            var payloadBase64 = Base64UrlTextEncoder.Encode(payloadJsonBytes);
-
-            return payloadBase64;
+            return passwordResetToken;
         }
 
-        public async Task ResetPasswordAsync(string password, string payload)
+        public async Task ResetPasswordAsync(string email, string password, string token)
         {
-            var jsonBytes = Base64UrlTextEncoder.Decode(payload);
-            var json = Encoding.UTF8.GetString(jsonBytes);
-
-            var payloadResetPassword = JsonConvert.DeserializeObject<PayloadEmail>(json);
-            var user = await _userManager.FindByEmailAsync(payloadResetPassword.EmailAddress);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
                 throw new InvalidUserException("Invalid Token.");
             }
 
-            var result = await _userManager.ResetPasswordAsync(user, payloadResetPassword.Token, password);
+            var result = await _userManager.ResetPasswordAsync(user, token, password);
             if (!result.Succeeded)
             {
-                throw new InvalidTokenException("Error while reseting password.");
+                var error = result.Errors.First();
+
+                if (error.Code == nameof(IdentityErrorDescriber.PasswordTooShort))
+                {
+                    throw new InvalidTokenException(error, "Password must be 6 character long.");
+                }
+
+                throw new InvalidTokenException(error, "Invalid Token.");
             }
         }
 

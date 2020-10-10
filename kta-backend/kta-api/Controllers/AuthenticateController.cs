@@ -33,13 +33,13 @@ namespace kta_api.Controllers
 
         [HttpPost]
         [Route("SignIn")]
-        public async Task<IActionResult> SignIn([FromBody] LoginModel model)
+        public async Task<IActionResult> SignIn([FromBody] SignInModel model)
         {
             try
             {
                 var token = await _authenticateService.SignInAsync(model.Email, model.Password);
+                
                 var response = new Response<dynamic> { Status = 200, Data = token };
-
                 return Ok(response);
             }
             catch (Exception e) when (e is InvalidUserException || e is InvalidPasswordException || e is EmailNotConfirmedException)
@@ -54,16 +54,19 @@ namespace kta_api.Controllers
 
         [HttpPost]
         [Route("SignUp")]
-        public async Task<IActionResult> SignUp([FromBody] RegisterModel model)
+        public async Task<IActionResult> SignUp([FromBody] SignUpModel model)
         {
             try
             {
-                var payloadJsonBase64 = await _authenticateService.SignUpAsync(model.Fullname, model.Email, model.Password);
-                var emailConfirmationLink = $"{model.RemoteSuccessConfirmationPath}?payload={payloadJsonBase64}";
+                var emailConfirmationToken = await _authenticateService.SignUpAsync(model.Fullname, model.Email, model.Password);
+
+                var emailConfirmationTokenBytes = Encoding.UTF8.GetBytes(emailConfirmationToken);
+                var emailConfirmationTokenBase64 = Base64UrlTextEncoder.Encode(emailConfirmationTokenBytes);
+                var emailConfirmationLink = $"{model.RedirectUrl}?token={emailConfirmationTokenBase64}";
 
                 await _email.SendEmailAsync(model.Email, "Email confirmation link", emailConfirmationLink);
+                
                 var response = new Response { Status = 200, Message = "A confirmation email has been sent to your address." };
-
                 return Ok(response);
             }
             catch (UserSignUpException e)
@@ -78,16 +81,19 @@ namespace kta_api.Controllers
 
         [HttpPost]
         [Route("SendResetPasswordLink")]
-        public async Task<IActionResult> SendResetPasswordLink([FromBody] SendResetPasswordLinkModel model)
+        public async Task<IActionResult> SendResetPasswordLink([FromBody] ResetPasswordLinkModel model)
         {
             try
             {
-                var payloadBase64 = await _authenticateService.CreateResetPasswordTokenAsync(model.Email);
-                var resetLink = $"{model.RemotePasswordChangePath}?payload={payloadBase64}";
+                var resetPasswordToken = await _authenticateService.CreateResetPasswordTokenAsync(model.Email);
+
+                var resetPasswordTokenBytes = Encoding.UTF8.GetBytes(resetPasswordToken);
+                var resetPasswordTokenBase64 = Base64UrlTextEncoder.Encode(resetPasswordTokenBytes);
+                var resetLink = $"{model.RedirectUrl}?token={resetPasswordTokenBase64}";
 
                 await _email.SendEmailAsync(model.Email, "Account password reset link", resetLink);
+                
                 var response = new Response { Status = 200 };
-
                 return Ok(response);
             }
             catch (InvalidUserException e)
@@ -102,13 +108,16 @@ namespace kta_api.Controllers
 
         [HttpPost]
         [Route("ResetPassword")]
-        public async Task<IActionResult> ResetPassword([FromBody] string password, string payload)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
             try
             {
-                await _authenticateService.ResetPasswordAsync(password, payload);
-                var response = new Response { Status = 200, Message = "Password reset successful" };
+                var resetPasswordTokenBytes = Base64UrlTextEncoder.Decode(model.Token);
+                var resetPasswordToken = Encoding.UTF8.GetString(resetPasswordTokenBytes);
 
+                await _authenticateService.ResetPasswordAsync(model.Email, model.Password, resetPasswordToken);
+                
+                var response = new Response { Status = 200, Message = "Password reset successful" };
                 return Ok(response);
             }
             catch (Exception e) when (e is InvalidUserException || e is InvalidTokenException)
@@ -123,13 +132,13 @@ namespace kta_api.Controllers
 
         [HttpPost]
         [Route("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail([FromBody] string email, string payload)
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailModel model)
         {
             try
             {
-                var tokenBytes = Base64UrlTextEncoder.Decode(payload);
-                var token = Encoding.UTF8.GetString(tokenBytes);
-                await _authenticateService.ConfirmEmail(email, token);
+                var emailConfirmationTokenBytes = Base64UrlTextEncoder.Decode(model.Token);
+                var emailConfirmationToken = Encoding.UTF8.GetString(emailConfirmationTokenBytes);
+                await _authenticateService.ConfirmEmail(model.Email, emailConfirmationToken);
 
                 var response = new Response { Status = 200, Message = "Email confirmation success." };
                 return Ok(response);
@@ -138,7 +147,7 @@ namespace kta_api.Controllers
             {
                 return Ok(new Response { Status = 403, Message = e.Message });
             }
-            catch (Exception e)
+            catch
             {
                 return Ok(new Response { Status = 500, Message = "Internal Server Error." });
             }

@@ -2,7 +2,7 @@
 
 namespace kta_api.Model
 {
-    public class RegisterModel
+    public class SignUpModel
     {
         [Required(ErrorMessage = "Fullname is required")]
         public string Fullname { get; set; }
@@ -14,6 +14,7 @@ namespace kta_api.Model
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
 
-        public string RemoteSuccessConfirmationPath { get; set; }
+        [Required(ErrorMessage = "RedirectUrl is required")]
+        public string RedirectUrl { get; set; }
     }
 }

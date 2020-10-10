@@ -1,17 +1,13 @@
 ﻿using kta_core._Exceptions;
 using kta_core.Models;
-using kta_core.Models.Payloads;
 using kta_core.Models.Settings;
 using kta_core.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace kta_core.tests
@@ -45,51 +41,45 @@ namespace kta_core.tests
         [Test]
         public async Task CreateResetPasswordTokenTest()
         {
-            var user = new User
+            var authenticateService = _serviceProvider.GetService<AuthenticateService>();
+
+            var mockerUser = new User
             {
                 Fullname = "John Doe",
                 UserName = "JohnDoe@example.com",
                 Email = "JohnDoe@example.com"
             };
 
-            var passwordResetTokenMock = Guid.NewGuid().ToString();
+            var mockResetPasswordToken = Guid.NewGuid().ToString();
 
             _userManagerMock
                 .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync(user);
+                .ReturnsAsync(mockerUser);
 
             _userManagerMock
                 .Setup(x => x.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
-                .ReturnsAsync(passwordResetTokenMock);
+                .ReturnsAsync(mockResetPasswordToken);
 
-            var authenticateService = _serviceProvider.GetService<AuthenticateService>();
+            var resetPasswordToken = default(string);
 
-            Assert.DoesNotThrowAsync
-            (
-                async () => await authenticateService.CreateResetPasswordTokenAsync(user.Email), 
-                "Should not throw Exception"
-            );
+            try
+            {
+                resetPasswordToken = await authenticateService.CreateResetPasswordTokenAsync(mockerUser.Email);
+            }
+            catch { Assert.Fail("Should not throw Exception"); }
 
-            var payload = await authenticateService.CreateResetPasswordTokenAsync(user.Email);
+            Assert.IsTrue(resetPasswordToken == mockResetPasswordToken, "Token does not match");
 
-            var expectedPayload = new PayloadEmail { EmailAddress = user.Email, Token = passwordResetTokenMock };
-            var expectedPayloadJson = JsonConvert.SerializeObject(expectedPayload);
-            var expectedPayloadJsonBytes = Encoding.UTF8.GetBytes(expectedPayloadJson);
-            var expectedPayloadJsonBase64 = Base64UrlTextEncoder.Encode(expectedPayloadJsonBytes);
-
-            Assert.IsTrue(payload == expectedPayloadJsonBase64, "Payload does not match");
+            _userManagerMock.Verify(x => x.FindByEmailAsync(mockerUser.Email), $"Should have call FindByEmailAsync with email {mockerUser.Email}");
+            _userManagerMock.Verify(x => x.GeneratePasswordResetTokenAsync(
+                It.Is<User>(p => p.Email == mockerUser.Email && p.UserName == mockerUser.Email && p.Fullname == mockerUser.Fullname)
+            ), "Should have call GeneratePasswordResetTokenAsync");
         }
 
         [Test]
         public void CreateResetPasswordTokenWithInvalidEmailTest()
         {
-            var user = new User
-            {
-                Fullname = "John Doe",
-                UserName = "JohnDoe@example.com",
-                Email = "JohnDoe@example.com"
-            };
-
+            var email = "JohnDoe@example.com";
             var passwordResetTokenMock = Guid.NewGuid().ToString();
 
             _userManagerMock
@@ -100,17 +90,19 @@ namespace kta_core.tests
 
             var exception = Assert.ThrowsAsync<InvalidUserException>
             (
-                async () => await authenticateService.CreateResetPasswordTokenAsync(user.Email),
+                async () => await authenticateService.CreateResetPasswordTokenAsync(email),
                 "CreateResetPasswordTokenAsync should have thrown InvalidUserException"
             );
 
             Assert.That(exception.Message == "The provided email are not registered.",
                 "Exception message should have been 'The provided email are not registered.'"
             );
+
+            _userManagerMock.Verify(x => x.FindByEmailAsync(email), $"Should call FindByEmailAsync with email {email}");
         }
 
         [Test]
-        public void ResetPassword()
+        public async Task ResetPassword()
         {
             var user = new User
             {
@@ -119,16 +111,12 @@ namespace kta_core.tests
                 Email = "JohnDoe@example.com"
             };
 
-            var newPassword = Guid.NewGuid().ToString();
-            var passwordResetTokenMock = Guid.NewGuid().ToString();
+            var password = Guid.NewGuid().ToString();
+            var mockResetTokenPassword = Guid.NewGuid().ToString();
 
             _userManagerMock
                 .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(user);
-
-            _userManagerMock
-                .Setup(x => x.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
-                .ReturnsAsync(passwordResetTokenMock);
 
             _userManagerMock
                 .Setup(x => x.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
@@ -136,30 +124,23 @@ namespace kta_core.tests
 
             var authenticateService = _serviceProvider.GetService<AuthenticateService>();
 
-            Assert.DoesNotThrowAsync
-            (
-                async () =>
-                {
-                    var payload = await authenticateService.CreateResetPasswordTokenAsync(user.Email);
-                    await authenticateService.ResetPasswordAsync(newPassword, payload);
-                },
-                "CreateResetPasswordTokenAsync and ResetPasswordAsync should not throw Exception"
-            );
+            try
+            {
+                await authenticateService.ResetPasswordAsync(user.Email, password, mockResetTokenPassword);
+            }
+            catch { Assert.Fail("Should not throw Exception"); }
 
-            _userManagerMock
-                .Verify(x => x.GeneratePasswordResetTokenAsync(
-                    It.Is<User>(y => y.Email == user.Email && y.Fullname == user.Fullname)
-                ), "GeneratePasswordResetTokenAsync should have been called");
-
-            _userManagerMock
-                .Verify(x => x.ResetPasswordAsync(
-                    It.Is<User>(y => y.Email == user.Email && y.Fullname == user.Fullname),
-                    passwordResetTokenMock, newPassword
-                ), "ResetPasswordAsync should have been called");
+            _userManagerMock.Verify(x => x.FindByEmailAsync(user.Email), $"Should call FindByEmailAsync with {user.Email}");
+            _userManagerMock.Verify(x => x.ResetPasswordAsync(
+                It.Is<User>(p => p.Email == user.Email && p.UserName == user.Email && p.Fullname == user.Fullname),
+                It.Is<string>(p => p == mockResetTokenPassword),
+                It.Is<string>(p => p == password)
+            ),
+            "Should call ResetPasswordAsync");
         }
 
         [Test]
-        public void ResetPasswordWithInvalidToken()
+        public async Task ResetPasswordWithInvalidUser()
         {
             var user = new User
             {
@@ -168,44 +149,85 @@ namespace kta_core.tests
                 Email = "JohnDoe@example.com"
             };
 
-            var newPassword = Guid.NewGuid().ToString();
-            var passwordResetTokenMock = Guid.NewGuid().ToString();
-
-            _userManagerMock
-                .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync(user);
-
-            _userManagerMock
-                .Setup(x => x.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
-                .ReturnsAsync(passwordResetTokenMock);
-
-            var authenticateService = _serviceProvider.GetService<AuthenticateService>();
-
-            var payload = default(string);
-            Assert.DoesNotThrowAsync
-            (
-                async () =>
-                {
-                    payload = await authenticateService.CreateResetPasswordTokenAsync(user.Email);
-                },
-                "CreateResetPasswordTokenAsync and ResetPasswordAsync should not throw Exception"
-            );
+            var password = Guid.NewGuid().ToString();
+            var mockResetTokenPassword = Guid.NewGuid().ToString();
 
             _userManagerMock
                 .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(default(User));
 
+            var authenticateService = _serviceProvider.GetService<AuthenticateService>();
+
+            try
+            {
+                await authenticateService.ResetPasswordAsync(user.Email, password, mockResetTokenPassword);
+            }
+            catch (InvalidUserException e)
+            {
+                Assert.That(e.Message == "Invalid Token.");
+            }
+
+            _userManagerMock.Verify(x => x.FindByEmailAsync(user.Email), $"Should call FindByEmailAsync with {user.Email}");
+        }
+
+        [Test]
+        public async Task ResetPasswordWithInvalidPassword()
+        {
+            var authenticateService = _serviceProvider.GetService<AuthenticateService>();
+
+            var user = new User
+            {
+                Fullname = "John Doe",
+                UserName = "JohnDoe@example.com",
+                Email = "JohnDoe@example.com"
+            };
+
+            var password = Guid.NewGuid().ToString();
+            var mockResetTokenPassword = Guid.NewGuid().ToString();
+            var mockInvalidPassword = new IdentityError { Code = nameof(IdentityErrorDescriber.PasswordTooShort) };
+
+            _userManagerMock
+                .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(user);
+            
             _userManagerMock
                 .Setup(x => x.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(IdentityResult.Success);
+                .ReturnsAsync(IdentityResult.Failed(mockInvalidPassword));
 
-            var invalidUserException = Assert.ThrowsAsync<InvalidUserException>
-            (
-                async () => await authenticateService.ResetPasswordAsync(newPassword, payload),
-                "ResetPasswordAsync should have throw InvalidUserException"
-            );
+            try
+            {
+                await authenticateService.ResetPasswordAsync(user.Email, password, mockResetTokenPassword);
+            }
+            catch (InvalidTokenException e)
+            {
+                Assert.That(e.Error.Code == mockInvalidPassword.Code, $"Error code should be {mockInvalidPassword.Code}");
+                Assert.That(e.Message == "Password must be 6 character long.", "Message should be 'Password must be 6 character long.'");
+            }
 
-            Assert.That(invalidUserException.Message == "Invalid Token.", "Exception message should have been 'Invalid Token.'");
+            _userManagerMock.Verify(x => x.FindByEmailAsync(user.Email), $"Should call FindByEmailAsync with {user.Email}");
+            _userManagerMock.Verify(x => x.ResetPasswordAsync(
+                It.Is<User>(p => p.Email == user.Email && p.UserName == user.Email && p.Fullname == user.Fullname),
+                It.Is<string>(p => p == mockResetTokenPassword),
+                It.Is<string>(p => p == password)
+            ),
+            "Should call ResetPasswordAsync");
+        }
+
+        [Test]
+        public async Task ResetPasswordWithInvalidToken()
+        {
+            var authenticateService = _serviceProvider.GetService<AuthenticateService>();
+
+            var user = new User
+            {
+                Fullname = "John Doe",
+                UserName = "JohnDoe@example.com",
+                Email = "JohnDoe@example.com"
+            };
+
+            var password = Guid.NewGuid().ToString();
+            var mockResetTokenPassword = Guid.NewGuid().ToString();
+            var mockInvalidPassword = new IdentityError { Code = nameof(IdentityErrorDescriber.InvalidToken) };
 
             _userManagerMock
                 .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
@@ -213,15 +235,25 @@ namespace kta_core.tests
 
             _userManagerMock
                 .Setup(x => x.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(IdentityResult.Failed());
+                .ReturnsAsync(IdentityResult.Failed(mockInvalidPassword));
 
-            var invalidTokenException = Assert.ThrowsAsync<InvalidTokenException>
-            (
-                async () => await authenticateService.ResetPasswordAsync(newPassword, payload),
-                "ResetPasswordAsync should have throw InvalidTokenException"
-            );
+            try
+            {
+                await authenticateService.ResetPasswordAsync(user.Email, password, mockResetTokenPassword);
+            }
+            catch (InvalidTokenException e)
+            {
+                Assert.That(e.Error.Code == mockInvalidPassword.Code, $"Error code should be {mockInvalidPassword.Code}");
+                Assert.That(e.Message == "Invalid Token.", "Message should be 'Invalid Token.'");
+            }
 
-            Assert.That(invalidTokenException.Message == "Error while reseting password.", "Exception message should have been 'Error while reseting password.'");
+            _userManagerMock.Verify(x => x.FindByEmailAsync(user.Email), $"Should call FindByEmailAsync with {user.Email}");
+            _userManagerMock.Verify(x => x.ResetPasswordAsync(
+                It.Is<User>(p => p.Email == user.Email && p.UserName == user.Email && p.Fullname == user.Fullname),
+                It.Is<string>(p => p == mockResetTokenPassword),
+                It.Is<string>(p => p == password)
+            ),
+            "Should call ResetPasswordAsync");
         }
     }
 }
