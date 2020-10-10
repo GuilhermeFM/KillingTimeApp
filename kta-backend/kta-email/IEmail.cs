@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace kta.email
+namespace kta_api.email
 {
     public interface IEmail
     {

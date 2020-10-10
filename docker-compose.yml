@@ -1,8 +1,10 @@
-version: "3"
+version: "3.3"
 
 services:
   kta-api:
-    build: ./kta-backend
+    build:
+      context: ./kta-backend
+      dockerfile: ./kta-api/Dockerfile
     container_name: kta-api
     ports:
       - 8080:8080

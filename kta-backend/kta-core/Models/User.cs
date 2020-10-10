@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace kta.Authentication
+namespace kta_core.Models
 {
     public class User : IdentityUser
     {

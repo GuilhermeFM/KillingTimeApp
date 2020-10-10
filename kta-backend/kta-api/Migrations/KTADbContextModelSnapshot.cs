@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using kta.Authentication;
+using kta_api.Authentication;
 
-namespace kta.Migrations
+namespace kta_api.Migrations
 {
     [DbContext(typeof(KTADbContext))]
     partial class KTADbContextModelSnapshot : ModelSnapshot

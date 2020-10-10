@@ -1,6 +1,9 @@
-using kta.Authentication;
-using kta.email;
-using kta.email.Models;
+using kta_api.Authentication;
+using kta_api.email;
+using kta_api.email.Models;
+using kta_core.Models;
+using kta_core.Models.Settings;
+using kta_core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace kta
+namespace kta_api
 {
     public class Startup
     {
@@ -56,6 +59,8 @@ namespace kta
 
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+
+                options.SignIn.RequireConfirmedEmail = true;
             })
             .AddEntityFrameworkStores<KTADbContext>()
             .AddDefaultTokenProviders();
@@ -88,6 +93,9 @@ namespace kta
             });
 
             services.AddTransient<IEmail, Email>();
+            services.AddTransient<AuthenticateService>();
+
+            services.Configure<AuthenticateServiceSettings>(Configuration.GetSection("JWT"));
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
         }
 

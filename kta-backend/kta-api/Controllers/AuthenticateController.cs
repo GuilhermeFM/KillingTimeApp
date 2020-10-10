@@ -1,21 +1,14 @@
-﻿using kta.Authentication;
-using kta.email;
-using kta.Model;
+﻿using kta_api.email;
+using kta_api.Model;
+using kta_core._Exceptions;
+using kta_core.Services;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace kta.Controllers
+namespace kta_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -23,167 +16,141 @@ namespace kta.Controllers
     {
         #region Deps
 
-        private readonly IEmail email;
-        private readonly IConfiguration configuration;
-        private readonly UserManager<User> userManager;
+        private AuthenticateService _authenticateService;
+        private IEmail _email;
 
         #endregion
 
         #region Constructors
 
-        public AuthenticateController(UserManager<User> userManager, IEmail email, IConfiguration configuration)
+        public AuthenticateController(AuthenticateService authenticateService, IEmail email)
         {
-            this.email = email;
-            this.configuration = configuration;
-
-            this.userManager = userManager;
+            _authenticateService = authenticateService;
+            _email = email;
         }
 
         #endregion
 
         [HttpPost]
         [Route("SignIn")]
-        public async Task<IActionResult> SignIn([FromBody] LoginModel model)
+        public async Task<IActionResult> SignIn([FromBody] SignInModel model)
         {
-            var user = await userManager.FindByEmailAsync(model.Email);
-            if (user == null)
+            try
             {
-                return Ok
-                (
-                    new Response { Status = 401, Message = "User or Password are invalid." }
-                );
+                var token = await _authenticateService.SignInAsync(model.Email, model.Password);
+                
+                var response = new Response<dynamic> { Status = 200, Data = token };
+                return Ok(response);
             }
-
-            var validPassword = await userManager.CheckPasswordAsync(user, model.Password);
-            if (!validPassword)
+            catch (Exception e) when (e is InvalidUserException || e is InvalidPasswordException || e is EmailNotConfirmedException)
             {
-                return Ok
-                (
-                    new Response { Status = 401, Message = "User or Password are invalid." }
-                );
+                return Ok(new Response { Status = 401, Message = e.Message });
             }
-
-            var JWTAuthClaims = (await userManager.GetRolesAsync(user))
-                .Select(userRole =>
-                    new Claim(ClaimTypes.Role, userRole)
-                )
-                .Concat(new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                });
-
-            var JWTSecrete = configuration["JWT:Secret"];
-            var JWTSecreteBytes = Encoding.UTF8.GetBytes(JWTSecrete);
-            var JWTAuthSigningKey = new SymmetricSecurityKey(JWTSecreteBytes);
-            var JWTSigningCredential = new SigningCredentials
-            (
-                JWTAuthSigningKey,
-                SecurityAlgorithms.HmacSha256
-            );
-
-            var JWTExpires = DateTime.Now.AddHours(3);
-
-            var JWTSecurityToken = new JwtSecurityToken
-            (
-                expires: JWTExpires,
-                claims: JWTAuthClaims,
-                signingCredentials: JWTSigningCredential
-            );
-
-            var token = new JwtSecurityTokenHandler()
-                .WriteToken(JWTSecurityToken);
-
-            return Ok
-            (
-                new Response<dynamic> { Status = 200, Data = token }
-            );
+            catch
+            {
+                return Ok(new Response { Status = 500, Message = "Internal Server Error." });
+            }
         }
 
         [HttpPost]
         [Route("SignUp")]
-        public async Task<IActionResult> SignUp([FromBody] RegisterModel model)
+        public async Task<IActionResult> SignUp([FromBody] SignUpModel model)
         {
-            var user = await userManager.FindByEmailAsync(model.Email);
-            if (user != null)
+            try
             {
-                return Ok
-                (
-                    new Response { Status = 403, Message = "The provided email is already in use." }
-                );
+                var emailConfirmationToken = await _authenticateService.SignUpAsync(model.Fullname, model.Email, model.Password);
+
+                var emailConfirmationTokenBytes = Encoding.UTF8.GetBytes(emailConfirmationToken);
+                var emailConfirmationTokenBase64 = Base64UrlTextEncoder.Encode(emailConfirmationTokenBytes);
+                var emailConfirmationLink = $"{model.RedirectUrl}?token={emailConfirmationTokenBase64}";
+
+                await _email.SendEmailAsync(model.Email, "Email confirmation link", emailConfirmationLink);
+                
+                var response = new Response { Status = 200, Message = "A confirmation email has been sent to your address." };
+                return Ok(response);
             }
-
-            user = new User
+            catch (UserSignUpException e)
             {
-                Email = model.Email,
-                UserName = model.Email,
-                Fullname = model.Fullname,
-                SecurityStamp = Guid.NewGuid().ToString(),
-            };
-
-            var result = await userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.FirstOrDefault().Description;
-                return Ok
-                (
-                    new Response
-                    {
-                        Status = 403,
-                        Message = string.Join("\n", errors)
-                    }
-                );
+                return Ok(new Response { Status = 403, Message = e.Error.Description });
             }
-
-            return Ok(new Response { Status = 200, Message = "User created successfully!" });
+            catch
+            {
+                return Ok(new Response { Status = 500, Message = "Internal Server Error." });
+            }
         }
 
         [HttpPost]
         [Route("SendResetPasswordLink")]
-        public async Task<IActionResult> SendResetPasswordLink([FromBody] SendResetPasswordLinkModel model)
+        public async Task<IActionResult> SendResetPasswordLink([FromBody] ResetPasswordLinkModel model)
         {
-            var user = await userManager.FindByEmailAsync(model.Email);
-
-            if (user == null)
+            try
             {
-                return Ok
-                (
-                    new Response { Status = 403, Message = "The provided email are not registered." }
-                );
+                var resetPasswordToken = await _authenticateService.CreateResetPasswordTokenAsync(model.Email);
+
+                var resetPasswordTokenBytes = Encoding.UTF8.GetBytes(resetPasswordToken);
+                var resetPasswordTokenBase64 = Base64UrlTextEncoder.Encode(resetPasswordTokenBytes);
+                var resetLink = $"{model.RedirectUrl}?token={resetPasswordTokenBase64}";
+
+                await _email.SendEmailAsync(model.Email, "Account password reset link", resetLink);
+                
+                var response = new Response { Status = 200 };
+                return Ok(response);
             }
-
-            var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
-            var passwordResetTokenBytes = Encoding.UTF8.GetBytes(passwordResetToken);
-            var resetLink = string.Format("{0}?token={1}&email={2}", model.RemoteViewPath, Base64UrlTextEncoder.Encode(passwordResetTokenBytes), model.Email);
-            await this.email.SendEmailAsync(user.Email, "Account password reset link", resetLink);
-
-            return Ok
-            (
-                new Response { Status = 200 }
-            );
+            catch (InvalidUserException e)
+            {
+                return Ok(new Response { Status = 403, Message = e.Message });
+            }
+            catch
+            {
+                return Ok(new Response { Status = 500, Message = "Internal Server Error." });
+            }
         }
 
         [HttpPost]
         [Route("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
-            var user = await userManager.FindByNameAsync(model.Email);
-            
-            var token = Base64UrlEncoder.Decode(model.Token);
-            var result = await userManager.ResetPasswordAsync(user, token, model.Password);
-
-            if (!result.Succeeded)
+            try
             {
-                return Ok
-                (
-                    new Response { Status = 403, Message = result.Errors.FirstOrDefault().Description }
-                );
-            }
+                var resetPasswordTokenBytes = Base64UrlTextEncoder.Decode(model.Token);
+                var resetPasswordToken = Encoding.UTF8.GetString(resetPasswordTokenBytes);
 
-            return Ok
-            (
-                new Response { Status = 200, Message = "Password reset successful" }
-            );
+                await _authenticateService.ResetPasswordAsync(model.Email, model.Password, resetPasswordToken);
+                
+                var response = new Response { Status = 200, Message = "Password reset successful" };
+                return Ok(response);
+            }
+            catch (Exception e) when (e is InvalidUserException || e is InvalidTokenException)
+            {
+                return Ok(new Response { Status = 403, Message = e.Message });
+            }
+            catch
+            {
+                return Ok(new Response { Status = 500, Message = "Internal Server Error." });
+            }
+        }
+
+        [HttpPost]
+        [Route("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailModel model)
+        {
+            try
+            {
+                var emailConfirmationTokenBytes = Base64UrlTextEncoder.Decode(model.Token);
+                var emailConfirmationToken = Encoding.UTF8.GetString(emailConfirmationTokenBytes);
+                await _authenticateService.ConfirmEmail(model.Email, emailConfirmationToken);
+
+                var response = new Response { Status = 200, Message = "Email confirmation success." };
+                return Ok(response);
+            }
+            catch (Exception e) when (e is InvalidUserException || e is InvalidTokenException)
+            {
+                return Ok(new Response { Status = 403, Message = e.Message });
+            }
+            catch
+            {
+                return Ok(new Response { Status = 500, Message = "Internal Server Error." });
+            }
         }
     }
 }

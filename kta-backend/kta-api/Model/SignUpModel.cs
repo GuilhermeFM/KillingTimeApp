@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace kta.Model
+namespace kta_api.Model
 {
-    public class RegisterModel
+    public class SignUpModel
     {
         [Required(ErrorMessage = "Fullname is required")]
         public string Fullname { get; set; }
@@ -13,5 +13,8 @@ namespace kta.Model
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
+
+        [Required(ErrorMessage = "RedirectUrl is required")]
+        public string RedirectUrl { get; set; }
     }
 }

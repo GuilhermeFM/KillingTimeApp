@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>kta</RootNamespace>
+    <RootNamespace>kta_api</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\kta-core\kta-core.csproj" />
     <ProjectReference Include="..\kta-email\kta-email.csproj" />
   </ItemGroup>
 

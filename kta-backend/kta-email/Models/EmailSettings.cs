@@ -1,4 +1,4 @@
-﻿namespace kta.email.Models
+﻿namespace kta_api.email.Models
 {
     public class EmailSettings
     {

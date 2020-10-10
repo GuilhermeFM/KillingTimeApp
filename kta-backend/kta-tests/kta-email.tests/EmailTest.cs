@@ -1,10 +1,10 @@
-using kta.email.Models;
+using kta_api.email.Models;
 
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 
-namespace kta.email.tests
+namespace kta_api.email.tests
 {
     [TestClass]
     public class EmailTest

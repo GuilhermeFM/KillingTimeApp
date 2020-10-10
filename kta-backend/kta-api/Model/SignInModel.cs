@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace kta.Model
+namespace kta_api.Model
 {
-    public class LoginModel
+    public class SignInModel
     {
         [Required(ErrorMessage = "User Name is required")]
         public string Email { get; set; }
