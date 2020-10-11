@@ -60,7 +60,7 @@ export const signIn = async (params: SignInParams): Promise<string> => {
 };
 
 interface ISendResetPasswordLink {
-  remoteViewPath: string;
+  redirectUrl: string;
   email: string;
 }
 

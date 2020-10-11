@@ -1,15 +1,14 @@
-import styled from 'styled-components';
+import React from 'react';
 
-export default styled.button`
-  @media (max-width: 400px) {
-    width: 100%;
-  }
+import Loading from '../../Loaders';
+import { Container } from './styles';
 
-  width: 150px;
-  padding: 1rem 1.5rem;
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  loading?: boolean;
+}
 
-  border: none;
-  border-radius: 5px;
+const Button: React.FC<ButtonProps> = ({ loading, children, ...rest }) => {
+  return <Container {...rest}>{loading ? <Loading /> : children}</Container>;
+};
 
-  transition: all 0.3s ease;
-`;
+export default Button;

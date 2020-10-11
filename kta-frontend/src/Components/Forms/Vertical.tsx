@@ -74,9 +74,8 @@ export const Vertical = styled(Form)`
 
   div#formbuttons {
     display: flex;
-    flex-flow: row wrap;
-    justify-content: space-around;
-
+    flex-flow: row nowrap;
+    justify-content: space-between;
     margin-top: 1rem;
   }
 
