@@ -6,8 +6,6 @@ export const Container = styled(animated.button)`
   flex-flow: row nowrap;
   justify-content: center;
 
-  width: 45%;
-  height: 53px;
   padding: 1rem 1.5rem;
 
   border: none;

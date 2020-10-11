@@ -34,5 +34,7 @@ export const Input = styled(InputText)`
 `;
 
 export const ButtonResetPassword = styled(ButtonPrimaryElevated)`
+  width: 100%;
+  height: 53px;
   margin-top: 1rem;
 `;

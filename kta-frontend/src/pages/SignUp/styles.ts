@@ -36,10 +36,16 @@ export const Input = styled(InputText)`
 `;
 
 export const ButtonSignUp = styled(ButtonPrimaryElevated)`
+  width: 45%;
+  height: 53px;
+
   margin-top: 1rem;
 `;
 
 export const ButtonCancel = styled(ButtonLightElevated)`
+  width: 45%;
+  height: 53px;
+
   margin-top: 1rem;
 `;
 

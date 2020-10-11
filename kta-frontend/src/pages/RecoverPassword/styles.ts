@@ -16,9 +16,13 @@ export const Container = styled.div`
 `;
 
 export const ButtonRequestPassword = styled(ButtonPrimaryElevated)`
+  width: 45%;
+  height: 53px;
   margin-top: 1rem;
 `;
 
 export const ButtonCancel = styled(ButtonLightElevated)`
+  width: 45%;
+  height: 53px;
   margin-top: 1rem;
 `;

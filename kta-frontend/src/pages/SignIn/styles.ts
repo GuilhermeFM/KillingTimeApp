@@ -24,8 +24,10 @@ export const Input = styled(InputText)`
 `;
 
 export const Button = styled(ButtonPrimaryElevated)`
+  width: 100%;
+  height: 53px;
+
   margin-top: 2rem;
-  align-self: center;
 `;
 
 export const Checkbox = styled(InputCheckbox)``;
