@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback } from 'react';
+import { useSpring, ReactSpringHook, useChain } from 'react-spring';
 import { Link, useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
-import { useSpring, useChain, ReactSpringHook } from 'react-spring';
 
 import { useToast } from '../../hooks/toast';
 import * as service from '../../services/api';
@@ -19,28 +19,25 @@ const RecoverPassword: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
-
-  const cancelButtonSpringsRef = useRef<ReactSpringHook>({} as ReactSpringHook);
-  const requestButtonSpringsRef = useRef<ReactSpringHook>(
-    {} as ReactSpringHook,
-  );
+  const cancelButtonSpringRef = useRef<ReactSpringHook>({} as ReactSpringHook);
+  const requestButtonSpringRef = useRef<ReactSpringHook>({} as ReactSpringHook);
 
   const cancelButtonSprings = useSpring({
     opacity: loading ? 0 : 1,
     display: loading ? 'none' : 'initial',
     config: { duration: 10 },
-    ref: cancelButtonSpringsRef,
+    ref: cancelButtonSpringRef,
   });
 
   const requestButtonSprings = useSpring({
     width: loading ? '100%' : '45%',
     config: { duration: 10 },
-    ref: requestButtonSpringsRef,
+    ref: requestButtonSpringRef,
   });
 
   const chainRefs = loading
-    ? [cancelButtonSpringsRef, requestButtonSpringsRef]
-    : [requestButtonSpringsRef, cancelButtonSpringsRef];
+    ? [cancelButtonSpringRef, requestButtonSpringRef]
+    : [requestButtonSpringRef, cancelButtonSpringRef];
 
   useChain(chainRefs);
 
@@ -50,30 +47,26 @@ const RecoverPassword: React.FC = () => {
 
       if (errors) {
         formRef.current?.setErrors(errors);
-        return;
-      }
+      } else {
+        formRef.current?.setErrors({});
 
-      try {
         setLoading(true);
 
-        const { email } = data;
-        const { protocol, hostname, port } = window.location;
+        try {
+          const { email } = data;
+          const { protocol, hostname, port } = window.location;
+          const redirectUrl = `${protocol}//${hostname}:${port}/ResetPassword`;
 
-        await service.sendResetPasswordLink({
-          email,
-          redirectUrl: `${protocol}//${hostname}:${port}/ResetPassword`,
-        });
+          const params = { email, redirectUrl };
+          const message = await service.sendResetPasswordLink(params);
 
-        addToast({
-          title: 'Success',
-          type: 'success',
-          content: 'Password reset link sent.',
-        });
-      } catch (err) {
-        addToast({ title: 'Error', type: 'error', content: err.message });
+          addToast({ title: 'Attention !', type: 'info', content: message });
+        } catch (err) {
+          addToast({ title: 'Error', type: 'error', content: err.message });
+        }
+
+        setLoading(false);
       }
-
-      setLoading(false);
     },
     [addToast],
   );

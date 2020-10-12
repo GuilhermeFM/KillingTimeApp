@@ -1,4 +1,5 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
+import { useSpring, ReactSpringHook, useChain } from 'react-spring';
 import { useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
@@ -19,7 +20,30 @@ import {
 const SignUp: React.FC = () => {
   const history = useHistory();
   const { addToast } = useToast();
+  const [loading, setLoading] = useState(false);
+
   const formRef = useRef<FormHandles>(null);
+  const cancelButtonSpringRef = useRef<ReactSpringHook>({} as ReactSpringHook);
+  const signUpButtonSpringRef = useRef<ReactSpringHook>({} as ReactSpringHook);
+
+  const cancelButtonSprings = useSpring({
+    opacity: loading ? 0 : 1,
+    display: loading ? 'none' : 'initial',
+    config: { duration: 10 },
+    ref: cancelButtonSpringRef,
+  });
+
+  const signUpButtonSprings = useSpring({
+    width: loading ? '100%' : '45%',
+    config: { duration: 10 },
+    ref: signUpButtonSpringRef,
+  });
+
+  const chainRefs = loading
+    ? [cancelButtonSpringRef, signUpButtonSpringRef]
+    : [signUpButtonSpringRef, cancelButtonSpringRef];
+
+  useChain(chainRefs);
 
   const handleSubmit = useCallback(
     async data => {
@@ -28,17 +52,27 @@ const SignUp: React.FC = () => {
 
       if (errors) {
         formRef.current?.setErrors(errors);
-        return;
-      }
+      } else {
+        formRef.current?.setErrors({});
 
-      try {
-        await signUp({ fullname, email, password });
-        history.push('/');
-      } catch (err) {
-        addToast({ title: 'Error', type: 'error', content: err.message });
+        setLoading(true);
+
+        try {
+          const { protocol, hostname, port } = window.location;
+          const redirectUrl = `${protocol}//${hostname}:${port}/EmailConfirmed`;
+
+          const signUpParams = { fullname, email, password, redirectUrl };
+          const message = await signUp(signUpParams);
+
+          addToast({ title: 'Attention', type: 'info', content: message });
+        } catch (err) {
+          addToast({ title: 'Error', type: 'error', content: err.message });
+        }
+
+        setLoading(false);
       }
     },
-    [addToast, history],
+    [addToast],
   );
 
   return (
@@ -63,8 +97,19 @@ const SignUp: React.FC = () => {
         </div>
 
         <div id="formbuttons">
-          <ButtonSignUp type="submit">Sign Up</ButtonSignUp>
-          <ButtonCancel type="button" onClick={() => history.push('/')}>
+          <ButtonSignUp
+            type="submit"
+            loading={loading}
+            style={signUpButtonSprings}
+            disabled={loading}
+          >
+            Sign Up
+          </ButtonSignUp>
+          <ButtonCancel
+            type="button"
+            onClick={() => history.push('/')}
+            style={cancelButtonSprings}
+          >
             Cancel
           </ButtonCancel>
         </div>

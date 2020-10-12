@@ -10,9 +10,10 @@ interface SignUpParams {
   fullname: string;
   email: string;
   password: string;
+  redirectUrl: string;
 }
 
-export const signUp = async (params: SignUpParams): Promise<void> => {
+export const signUp = async (params: SignUpParams): Promise<string> => {
   try {
     const response = await api.post('authenticate/SignUp', params);
     const { status, message } = response.data;
@@ -20,6 +21,8 @@ export const signUp = async (params: SignUpParams): Promise<void> => {
     if (status !== 200) {
       throw new IAPIError(message);
     }
+
+    return message;
   } catch (err) {
     if (err instanceof IAPIError) {
       throw err;
@@ -73,15 +76,13 @@ export const sendResetPasswordLink = async (
       params,
     );
 
-    const { status } = response.data;
+    const { status, message } = response.data;
 
     if (status !== 200) {
-      const { message } = response.data;
       throw new IAPIError(message);
     }
 
-    const { data } = response.data;
-    return data;
+    return message;
   } catch (err) {
     if (err instanceof IAPIError) {
       throw err;
