@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import { useToast } from '../../hooks/toast';
 import * as service from '../../services/api';
-
 import logo from '../../assets/logo-2.png';
 
 import { Container, Form, ButtonSignUp } from './styles';
 
 const ConfirmEmail: React.FC = () => {
   const history = useHistory();
+  const { addToast } = useToast();
   const { search } = useLocation();
   const query = new URLSearchParams(search);
 
@@ -20,13 +21,19 @@ const ConfirmEmail: React.FC = () => {
 
       if (!token) history.push('/');
       else {
-        await service.confirmEmail({ token });
+        try {
+          await service.confirmEmail({ token });
+        } catch (err) {
+          addToast({ title: 'Error', type: 'error', content: err.message });
+          history.push('/');
+        }
+
         setConfirmingEmail(false);
       }
     };
 
     confirmEmail();
-  }, [history, query]);
+  }, []);
 
   return (
     <Container>
