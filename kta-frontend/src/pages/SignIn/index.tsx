@@ -2,14 +2,13 @@ import React, { useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
-import Form from '../../components/Forms/Vertical';
 import validate from '../../validations/SignIn';
 import IAPIError from '../../errors/APIError';
 import { useToast } from '../../hooks/toast';
 import { useAuth } from '../../hooks/auth';
 import logo from '../../assets/logo-2.png';
 
-import { Container, Input, Button, Checkbox } from './styles';
+import { Container, Form, Input, Button, Checkbox } from './styles';
 
 const SignIn: React.FC = () => {
   const { signIn } = useAuth();

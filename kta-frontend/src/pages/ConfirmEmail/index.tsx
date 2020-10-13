@@ -33,7 +33,7 @@ const ConfirmEmail: React.FC = () => {
     };
 
     confirmEmail();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Container>

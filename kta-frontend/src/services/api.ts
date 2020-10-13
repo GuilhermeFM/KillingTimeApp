@@ -95,21 +95,23 @@ export const sendResetPasswordLink = async (
 };
 
 interface IResetPassword {
-  email: string;
   password: string;
   token: string;
 }
 
-export const resetPassword = async (params: IResetPassword): Promise<void> => {
+export const resetPassword = async (
+  params: IResetPassword,
+): Promise<string> => {
   try {
     const response = await api.post('authenticate/ResetPassword', params);
 
-    const { status } = response.data;
+    const { status, message } = response.data;
 
     if (status !== 200) {
-      const { message } = response.data;
       throw new IAPIError(message);
     }
+
+    return message;
   } catch (err) {
     if (err instanceof IAPIError) {
       throw err;

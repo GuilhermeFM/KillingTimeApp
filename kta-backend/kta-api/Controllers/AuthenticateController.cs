@@ -90,10 +90,12 @@ namespace kta_api.Controllers
             {
                 var resetPasswordToken = await _authenticateService.CreateResetPasswordTokenAsync(model.Email);
 
-                var resetPasswordTokenBytes = Encoding.UTF8.GetBytes(resetPasswordToken);
-                var resetPasswordTokenBase64 = Base64UrlTextEncoder.Encode(resetPasswordTokenBytes);
-                var resetLink = $"{model.RedirectUrl}?token={resetPasswordTokenBase64}";
+                var token = new Token { Email = model.Email, Hash = resetPasswordToken };
+                var tokenJson = JsonConvert.SerializeObject(token);
+                var tokenJsonBytes = Encoding.UTF8.GetBytes(tokenJson);
+                var tokenJsonBase64 = Base64UrlTextEncoder.Encode(tokenJsonBytes);
 
+                var resetLink = $"{model.RedirectUrl}?token={tokenJsonBase64}";
                 await _email.SendEmailAsync(model.Email, "Account password reset link", resetLink);
                 
                 var response = new Response { Status = 200, Message = "Account password reset link was sent to you email address." };
@@ -115,10 +117,11 @@ namespace kta_api.Controllers
         {
             try
             {
-                var resetPasswordTokenBytes = Base64UrlTextEncoder.Decode(model.Token);
-                var resetPasswordToken = Encoding.UTF8.GetString(resetPasswordTokenBytes);
+                var dataJsonBytes = Base64UrlTextEncoder.Decode(model.Token);
+                var dataJson = Encoding.UTF8.GetString(dataJsonBytes);
+                var data = JsonConvert.DeserializeObject<Token>(dataJson);
 
-                await _authenticateService.ResetPasswordAsync(model.Email, model.Password, resetPasswordToken);
+                await _authenticateService.ResetPasswordAsync(data.Email, model.Password, data.Hash);
                 
                 var response = new Response { Status = 200, Message = "Password reset successful" };
                 return Ok(response);

@@ -25,6 +25,10 @@ export const Form = styled(VerticalForm)`
       text-decoration: underline;
     }
   }
+
+  div#formbuttons {
+    justify-content: center;
+  }
 `;
 
 export const Input = styled(InputText)`
@@ -34,7 +38,7 @@ export const Input = styled(InputText)`
 `;
 
 export const ButtonResetPassword = styled(ButtonPrimaryElevated)`
-  width: 100%;
+  width: 50%;
   height: 53px;
   margin-top: 1rem;
 `;
