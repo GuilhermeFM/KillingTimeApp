@@ -120,3 +120,28 @@ export const resetPassword = async (params: IResetPassword): Promise<void> => {
     );
   }
 };
+
+interface IConfirmEmail {
+  token: string;
+}
+
+export const confirmEmail = async (params: IConfirmEmail): Promise<void> => {
+  try {
+    const response = await api.post('authenticate/ConfirmEmail', params);
+
+    const { status } = response.data;
+
+    if (status !== 200) {
+      const { message } = response.data;
+      throw new IAPIError(message);
+    }
+  } catch (err) {
+    if (err instanceof IAPIError) {
+      throw err;
+    }
+
+    throw new IAPIError(
+      'A error has occurred while processing your request. Try again later',
+    );
+  }
+};

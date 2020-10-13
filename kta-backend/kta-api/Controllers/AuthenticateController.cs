@@ -4,6 +4,7 @@ using kta_core._Exceptions;
 using kta_core.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,13 +61,15 @@ namespace kta_api.Controllers
             {
                 var emailConfirmationToken = await _authenticateService.SignUpAsync(model.Fullname, model.Email, model.Password);
 
-                var emailConfirmationTokenBytes = Encoding.UTF8.GetBytes(emailConfirmationToken);
-                var emailConfirmationTokenBase64 = Base64UrlTextEncoder.Encode(emailConfirmationTokenBytes);
-                var emailConfirmationLink = $"{model.RedirectUrl}?token={emailConfirmationTokenBase64}";
+                var token = new Token { Email = model.Email, Hash = emailConfirmationToken };
+                var tokenJson = JsonConvert.SerializeObject(token);
+                var tokenJsonBytes = Encoding.UTF8.GetBytes(tokenJson);
+                var tokenJsonBase64 = Base64UrlTextEncoder.Encode(tokenJsonBytes);
 
+                var emailConfirmationLink = $"{model.RedirectUrl}?token={tokenJsonBase64}";
                 await _email.SendEmailAsync(model.Email, "Email confirmation link", emailConfirmationLink);
                 
-                var response = new Response { Status = 200, Message = "A confirmation email has been sent to your address." };
+                var response = new Response { Status = 200, Message = "A confirmation email was sent to your email address." };
                 return Ok(response);
             }
             catch (UserSignUpException e)
@@ -93,7 +96,7 @@ namespace kta_api.Controllers
 
                 await _email.SendEmailAsync(model.Email, "Account password reset link", resetLink);
                 
-                var response = new Response { Status = 200 };
+                var response = new Response { Status = 200, Message = "Account password reset link was sent to you email address." };
                 return Ok(response);
             }
             catch (InvalidUserException e)
@@ -136,11 +139,13 @@ namespace kta_api.Controllers
         {
             try
             {
-                var emailConfirmationTokenBytes = Base64UrlTextEncoder.Decode(model.Token);
-                var emailConfirmationToken = Encoding.UTF8.GetString(emailConfirmationTokenBytes);
-                await _authenticateService.ConfirmEmail(model.Email, emailConfirmationToken);
+                var dataJsonBytes = Base64UrlTextEncoder.Decode(model.Token);
+                var dataJson = Encoding.UTF8.GetString(dataJsonBytes);
+                var data = JsonConvert.DeserializeObject<Token>(dataJson);
 
-                var response = new Response { Status = 200, Message = "Email confirmation success." };
+                await _authenticateService.ConfirmEmail(data.Email, data.Hash);
+
+                var response = new Response { Status = 200 };
                 return Ok(response);
             }
             catch (Exception e) when (e is InvalidUserException || e is InvalidTokenException)
