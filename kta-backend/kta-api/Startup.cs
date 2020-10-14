@@ -1,6 +1,4 @@
 using kta_api.Authentication;
-using kta_api.email;
-using kta_api.email.Models;
 using kta_core.Models;
 using kta_core.Models.Settings;
 using kta_core.Services;
@@ -32,6 +30,8 @@ namespace kta_api
         {
             services.AddControllers();
 
+            #region SETUP - CORS
+
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
@@ -43,10 +43,18 @@ namespace kta_api
                 });
             });
 
+            #endregion
+
+            #region SETUP - EF Context
+
             services.AddDbContext<KTADbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("ConnStr"));
             });
+
+            #endregion
+
+            #region SETUP - Identity
 
             services.AddIdentity<User, IdentityRole>(options =>
             {
@@ -64,6 +72,10 @@ namespace kta_api
             })
             .AddEntityFrameworkStores<KTADbContext>()
             .AddDefaultTokenProviders();
+
+            #endregion
+
+            #region SETUP - JWT Auth
 
             var JWTValidAudience = Configuration["JWT:ValidAudience"];
             var JWTValidIssuer = Configuration["JWT:ValidIssuer"];
@@ -92,11 +104,23 @@ namespace kta_api
                 };
             });
 
-            services.AddTransient<IEmail, Email>();
-            services.AddTransient<AuthenticateService>();
+            #endregion
 
+            #region SETUP - EMAIL
+
+            var username = Configuration["EmailSettings:Username"];
+            var password = Configuration["EmailSettings:Password"];
+            var server = Configuration["EmailSettings:PrimaryDomain"];
+            var port = Configuration.GetValue<int>("EmailSettings:PrimaryPort");
+            
+            services
+                .AddFluentEmail("kta-app@example.com", "KTA APP")
+                .AddMailtrapSender(username, password, server, port);
+
+            #endregion
+
+            services.AddTransient<AuthenticateService>();
             services.Configure<AuthenticateServiceSettings>(Configuration.GetSection("JWT"));
-            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

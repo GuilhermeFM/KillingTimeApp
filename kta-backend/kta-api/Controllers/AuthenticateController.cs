@@ -1,4 +1,5 @@
-﻿using kta_api.email;
+﻿using FluentEmail.Core;
+using kta_api.email;
 using kta_api.Model;
 using kta_core._Exceptions;
 using kta_core.Services;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,13 +20,13 @@ namespace kta_api.Controllers
         #region Deps
 
         private AuthenticateService _authenticateService;
-        private IEmail _email;
+        private IFluentEmail _email;
 
         #endregion
 
         #region Constructors
 
-        public AuthenticateController(AuthenticateService authenticateService, IEmail email)
+        public AuthenticateController(AuthenticateService authenticateService, IFluentEmail email)
         {
             _authenticateService = authenticateService;
             _email = email;
@@ -39,7 +41,7 @@ namespace kta_api.Controllers
             try
             {
                 var token = await _authenticateService.SignInAsync(model.Email, model.Password);
-                
+
                 var response = new Response<dynamic> { Status = 200, Data = token };
                 return Ok(response);
             }
@@ -66,9 +68,23 @@ namespace kta_api.Controllers
                 var tokenJsonBytes = Encoding.UTF8.GetBytes(tokenJson);
                 var tokenJsonBase64 = Base64UrlTextEncoder.Encode(tokenJsonBytes);
 
+                var emailConfirmationTemplatePath = Path.Combine(
+                    Directory.GetCurrentDirectory(), "Model/Templates/Email/EmailConfirmation.html"
+                );
+
                 var emailConfirmationLink = $"{model.RedirectUrl}?token={tokenJsonBase64}";
-                await _email.SendEmailAsync(model.Email, "Email confirmation link", emailConfirmationLink);
-                
+                var emailTemplate = System.IO.File.ReadAllText(emailConfirmationTemplatePath);
+                var email = emailTemplate
+                    .Replace("[%fullname%]", model.Fullname)
+                    .Replace("[%url%]", emailConfirmationLink);
+                    
+
+                await _email
+                    .To(model.Email)
+                    .Subject("Confirm your account email.")
+                    .Body(email, true)
+                    .SendAsync();
+
                 var response = new Response { Status = 200, Message = "A confirmation email was sent to your email address." };
                 return Ok(response);
             }
@@ -95,9 +111,21 @@ namespace kta_api.Controllers
                 var tokenJsonBytes = Encoding.UTF8.GetBytes(tokenJson);
                 var tokenJsonBase64 = Base64UrlTextEncoder.Encode(tokenJsonBytes);
 
-                var resetLink = $"{model.RedirectUrl}?token={tokenJsonBase64}";
-                await _email.SendEmailAsync(model.Email, "Account password reset link", resetLink);
-                
+                var emailConfirmationTemplatePath = Path.Combine(
+                    Directory.GetCurrentDirectory(), "Model/Templates/Email/EmailPasswordReset.html"
+                );
+
+                var resetPasswordLink = $"{model.RedirectUrl}?token={tokenJsonBase64}";
+                var emailTemplate = System.IO.File.ReadAllText(emailConfirmationTemplatePath);
+                var email = emailTemplate
+                    .Replace("[%url%]", resetPasswordLink);
+
+                await _email
+                    .To(model.Email)
+                    .Subject("Reset your account password.")
+                    .Body(email, true)
+                    .SendAsync();
+
                 var response = new Response { Status = 200, Message = "Account password reset link was sent to you email address." };
                 return Ok(response);
             }
@@ -122,7 +150,7 @@ namespace kta_api.Controllers
                 var data = JsonConvert.DeserializeObject<Token>(dataJson);
 
                 await _authenticateService.ResetPasswordAsync(data.Email, model.Password, data.Hash);
-                
+
                 var response = new Response { Status = 200, Message = "Password reset successful" };
                 return Ok(response);
             }

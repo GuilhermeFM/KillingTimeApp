@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kta-email", "kta-email\kta-
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kta-email.tests", "kta-tests\kta-email.tests\kta-email.tests.csproj", "{D2CE1905-E483-4E27-B387-DD1DD39A04BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kta-core", "kta-core\kta-core.csproj", "{B9DD831D-02EF-4DD0-8DC1-1E5A559C31F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kta-core", "kta-core\kta-core.csproj", "{B9DD831D-02EF-4DD0-8DC1-1E5A559C31F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kta-core.tests", "kta-tests\kta-core.tests\kta-core.tests.csproj", "{A73AE99F-7D28-42AA-B883-7950EC9D3AD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kta-core.tests", "kta-tests\kta-core.tests\kta-core.tests.csproj", "{A73AE99F-7D28-42AA-B883-7950EC9D3AD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

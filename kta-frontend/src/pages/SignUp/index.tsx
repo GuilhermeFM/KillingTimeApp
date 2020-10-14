@@ -59,7 +59,7 @@ const SignUp: React.FC = () => {
 
         try {
           const { protocol, hostname, port } = window.location;
-          const redirectUrl = `${protocol}//${hostname}:${port}/EmailConfirmed`;
+          const redirectUrl = `${protocol}//${hostname}:${port}/ConfirmEmail`;
 
           const signUpParams = { fullname, email, password, redirectUrl };
           const message = await signUp(signUpParams);
