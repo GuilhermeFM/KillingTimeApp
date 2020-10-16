@@ -22,6 +22,8 @@ namespace kta_queue
 
         public void ConfigureServices(IServiceCollection services)
         {
+            #region SETUP - HANGFIRE
+
             var hangfireConnectionString = Configuration.GetConnectionString("ConnStr");
             var sqlServerStorageOptions = new SqlServerStorageOptions
             {
@@ -42,6 +44,21 @@ namespace kta_queue
             });
 
             services.AddHangfireServer();
+
+            #endregion
+
+            #region SETUP - EMAIL
+
+            var username = Configuration["EmailSettings:Username"];
+            var password = Configuration["EmailSettings:Password"];
+            var server = Configuration["EmailSettings:PrimaryDomain"];
+            var port = Configuration.GetValue<int>("EmailSettings:PrimaryPort");
+
+            services
+                .AddFluentEmail("kta-app@example.com", "KTA APP")
+                .AddMailtrapSender(username, password, server, port);
+
+            #endregion
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

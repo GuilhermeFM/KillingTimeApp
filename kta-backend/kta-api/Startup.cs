@@ -1,3 +1,5 @@
+using Hangfire;
+using Hangfire.SqlServer;
 using kta_api.Authentication;
 using kta_core.Models;
 using kta_core.Models.Settings;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 
 namespace kta_api
@@ -106,16 +109,26 @@ namespace kta_api
 
             #endregion
 
-            #region SETUP - EMAIL
+            #region SETUP - HANGFIRE
 
-            var username = Configuration["EmailSettings:Username"];
-            var password = Configuration["EmailSettings:Password"];
-            var server = Configuration["EmailSettings:PrimaryDomain"];
-            var port = Configuration.GetValue<int>("EmailSettings:PrimaryPort");
-            
-            services
-                .AddFluentEmail("kta-app@example.com", "KTA APP")
-                .AddMailtrapSender(username, password, server, port);
+            var hangfireConnectionString = Configuration.GetConnectionString("ConnStrHangfire");
+            var sqlServerStorageOptions = new SqlServerStorageOptions
+            {
+                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                QueuePollInterval = TimeSpan.Zero,
+                UseRecommendedIsolationLevel = true,
+                DisableGlobalLocks = true,
+            };
+
+            services.AddHangfire(configuration =>
+            {
+                configuration
+                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UseSqlServerStorage(hangfireConnectionString, sqlServerStorageOptions);
+            });
 
             #endregion
 

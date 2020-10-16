@@ -1,7 +1,7 @@
-﻿using FluentEmail.Core;
-using kta_api.email;
+﻿using Hangfire;
 using kta_api.Model;
 using kta_core._Exceptions;
+using kta_core.Jobs;
 using kta_core.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -20,16 +20,16 @@ namespace kta_api.Controllers
         #region Deps
 
         private AuthenticateService _authenticateService;
-        private IFluentEmail _email;
+        private IBackgroundJobClient _backgroundJobClient;
 
         #endregion
 
         #region Constructors
 
-        public AuthenticateController(AuthenticateService authenticateService, IFluentEmail email)
+        public AuthenticateController(AuthenticateService authenticateService, IBackgroundJobClient backgroundJobClient)
         {
             _authenticateService = authenticateService;
-            _email = email;
+            _backgroundJobClient = backgroundJobClient;
         }
 
         #endregion
@@ -68,22 +68,10 @@ namespace kta_api.Controllers
                 var tokenJsonBytes = Encoding.UTF8.GetBytes(tokenJson);
                 var tokenJsonBase64 = Base64UrlTextEncoder.Encode(tokenJsonBytes);
 
-                var emailConfirmationTemplatePath = Path.Combine(
-                    Directory.GetCurrentDirectory(), "Model/Templates/Email/EmailConfirmation.html"
-                );
-
                 var emailConfirmationLink = $"{model.RedirectUrl}?token={tokenJsonBase64}";
-                var emailTemplate = System.IO.File.ReadAllText(emailConfirmationTemplatePath);
-                var email = emailTemplate
-                    .Replace("[%fullname%]", model.Fullname)
-                    .Replace("[%url%]", emailConfirmationLink);
-                    
-
-                await _email
-                    .To(model.Email)
-                    .Subject("Confirm your account email.")
-                    .Body(email, true)
-                    .SendAsync();
+                _backgroundJobClient.Enqueue<SendEmailJob>(x =>
+                    x.SendConfirmationLinkEmail(model.Email, model.Fullname, emailConfirmationLink)
+                );
 
                 var response = new Response { Status = 200, Message = "A confirmation email was sent to your email address." };
                 return Ok(response);
@@ -111,20 +99,8 @@ namespace kta_api.Controllers
                 var tokenJsonBytes = Encoding.UTF8.GetBytes(tokenJson);
                 var tokenJsonBase64 = Base64UrlTextEncoder.Encode(tokenJsonBytes);
 
-                var emailConfirmationTemplatePath = Path.Combine(
-                    Directory.GetCurrentDirectory(), "Model/Templates/Email/EmailPasswordReset.html"
-                );
-
                 var resetPasswordLink = $"{model.RedirectUrl}?token={tokenJsonBase64}";
-                var emailTemplate = System.IO.File.ReadAllText(emailConfirmationTemplatePath);
-                var email = emailTemplate
-                    .Replace("[%url%]", resetPasswordLink);
-
-                await _email
-                    .To(model.Email)
-                    .Subject("Reset your account password.")
-                    .Body(email, true)
-                    .SendAsync();
+                _backgroundJobClient.Enqueue<SendEmailJob>(x => x.SendResetPasswordLinkEmail(model.Email, resetPasswordLink));
 
                 var response = new Response { Status = 200, Message = "Account password reset link was sent to you email address." };
                 return Ok(response);
