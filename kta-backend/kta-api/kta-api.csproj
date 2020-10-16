@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\kta-core\kta-core.csproj" />
-    <ProjectReference Include="..\kta-email\kta-email.csproj" />
   </ItemGroup>
 
 

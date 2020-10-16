@@ -9,15 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kta-tests", "kta-tests", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kta-api", "kta-api\kta-api.csproj", "{91784995-E113-4F2E-A589-3D419613A2C2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kta-email", "kta-email\kta-email.csproj", "{ADC7BE6E-4AC9-42B7-8E82-6F528C6F2309}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kta-email.tests", "kta-tests\kta-email.tests\kta-email.tests.csproj", "{D2CE1905-E483-4E27-B387-DD1DD39A04BE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kta-core", "kta-core\kta-core.csproj", "{B9DD831D-02EF-4DD0-8DC1-1E5A559C31F7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kta-core.tests", "kta-tests\kta-core.tests\kta-core.tests.csproj", "{A73AE99F-7D28-42AA-B883-7950EC9D3AD9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kta-queue", "kta-queue\kta-queue.csproj", "{3375C007-65A7-4EE0-85B0-4E233F8BF740}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kta-queue", "kta-queue\kta-queue.csproj", "{3375C007-65A7-4EE0-85B0-4E233F8BF740}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +25,6 @@ Global
 		{91784995-E113-4F2E-A589-3D419613A2C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91784995-E113-4F2E-A589-3D419613A2C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91784995-E113-4F2E-A589-3D419613A2C2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADC7BE6E-4AC9-42B7-8E82-6F528C6F2309}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADC7BE6E-4AC9-42B7-8E82-6F528C6F2309}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADC7BE6E-4AC9-42B7-8E82-6F528C6F2309}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADC7BE6E-4AC9-42B7-8E82-6F528C6F2309}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D2CE1905-E483-4E27-B387-DD1DD39A04BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D2CE1905-E483-4E27-B387-DD1DD39A04BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D2CE1905-E483-4E27-B387-DD1DD39A04BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D2CE1905-E483-4E27-B387-DD1DD39A04BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B9DD831D-02EF-4DD0-8DC1-1E5A559C31F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9DD831D-02EF-4DD0-8DC1-1E5A559C31F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9DD831D-02EF-4DD0-8DC1-1E5A559C31F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -54,8 +42,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{ADC7BE6E-4AC9-42B7-8E82-6F528C6F2309} = {4DD44258-19D0-48A6-837F-A7A8497842D2}
-		{D2CE1905-E483-4E27-B387-DD1DD39A04BE} = {5DA31E8C-350A-4EEA-BC3C-429504369D78}
 		{B9DD831D-02EF-4DD0-8DC1-1E5A559C31F7} = {4DD44258-19D0-48A6-837F-A7A8497842D2}
 		{A73AE99F-7D28-42AA-B883-7950EC9D3AD9} = {5DA31E8C-350A-4EEA-BC3C-429504369D78}
 	EndGlobalSection
