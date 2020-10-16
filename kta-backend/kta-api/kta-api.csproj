@@ -15,7 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentEmail.Mailtrap" Version="2.7.0" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.16" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.16" />
+    <PackageReference Include="Hangfire.SqlServer" Version="1.7.16" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
@@ -29,15 +31,6 @@
   <ItemGroup>
     <ProjectReference Include="..\kta-core\kta-core.csproj" />
     <ProjectReference Include="..\kta-email\kta-email.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Model\Templates\Email\EmailConfirmation.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Model\Templates\Email\EmailPasswordReset.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 
