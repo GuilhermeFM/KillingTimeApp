@@ -1,5 +1,7 @@
 using Hangfire;
+using Hangfire.Dashboard;
 using Hangfire.SqlServer;
+using kta_queue.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -70,7 +72,11 @@ namespace kta_queue
 
             app.UseRouting();
 
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new AuthorizationFilter() },
+                IsReadOnlyFunc = (DashboardContext context) => true
+            });
 
             app.UseEndpoints(endpoints =>
             {
