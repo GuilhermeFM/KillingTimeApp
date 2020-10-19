@@ -29,7 +29,18 @@ export const ToastContainer = styled.div`
 `;
 
 export const ToastContent = styled(animated.div)<ToastProps>`
-  width: 360px;
+  @media (min-width: 320px) {
+    width: 280px;
+  }
+
+  @media (min-width: 360px) {
+    width: 300px;
+  }
+
+  @media (min-width: 400px) {
+    width: 350px;
+  }
+
   position: relative;
   padding: 16px 30px 16px 16px;
   border-radius: 10px;
