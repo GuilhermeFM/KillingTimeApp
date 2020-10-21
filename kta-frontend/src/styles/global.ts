@@ -18,26 +18,6 @@ export default createGlobalStyle`
     height: 100%;
     min-width: 360;
     min-height: 730;
-    overflow: auto;
-
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #eeeeee;
-      border: 1px solid #eeeeee;
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: ${shade(0.2, '#c3c3c3')};
-      border-radius: 20px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: ${shade(0.3, '#c3c3c3')};
-    }
   }
 
   html, body {

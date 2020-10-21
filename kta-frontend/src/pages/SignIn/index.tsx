@@ -51,6 +51,7 @@ const SignIn: React.FC = () => {
       <Form ref={formRef} onSubmit={handleSubmit}>
         <img id="logo" src={logo} alt="logo" />
         <p id="title">Sign In To Admin</p>
+        <p id="description">Enter your details to login to your account:</p>
 
         <Input type="email" name="email" placeholder="Email" />
         <Input type="password" name="password" placeholder="Password" />
