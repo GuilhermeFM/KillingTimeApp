@@ -1,19 +1,39 @@
 import React from 'react';
-import { Scrollbars } from 'react-custom-scrollbars';
 
-import { Container, SideMenu, Header, Content, Footer } from './styles';
+import {
+  ContentScroll,
+  Container,
+  SideMenu,
+  Header,
+  SubHeader,
+  Main,
+  Footer,
+} from './styles';
 
 const Default: React.FC = ({ children }) => {
   return (
     <Container>
       <SideMenu>
-        <Scrollbars style={{ height: '100%' }}>Side Menu</Scrollbars>
+        <ContentScroll>Side Menu</ContentScroll>
       </SideMenu>
       <Header>Header</Header>
-      <Content>
-        <Scrollbars style={{ height: '100%' }}>{children}</Scrollbars>
-      </Content>
-      <Footer>Footer</Footer>
+      <Main>
+        <ContentScroll>
+          <SubHeader>
+            <h5>Tabbed Subheader</h5>
+            <ul>
+              <li>
+                <a href="/#">Subheaders</a>
+              </li>
+              <li>
+                <a href="/#">Classic</a>
+              </li>
+            </ul>
+          </SubHeader>
+          {children}
+          <Footer>Footer</Footer>
+        </ContentScroll>
+      </Main>
     </Container>
   );
 };

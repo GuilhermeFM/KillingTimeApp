@@ -1,5 +1,4 @@
 import { createGlobalStyle } from 'styled-components';
-import { shade } from 'polished';
 
 export default createGlobalStyle`
   * {
