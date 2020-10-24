@@ -8,6 +8,9 @@ import { AuthProvider } from './hooks/auth';
 import { ToastProvider } from './hooks/toast';
 import Routes from './routes';
 
+import './styles/icons/flaticon.css';
+import './styles/icons/flaticon2.css';
+
 const App: React.FC = () => {
   return (
     <ThemeProvider theme={lightDark}>

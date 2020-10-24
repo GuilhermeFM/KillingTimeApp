@@ -1,39 +1,6 @@
 import styled from 'styled-components';
-import { Scrollbars } from 'react-custom-scrollbars';
 
 export const Container = styled.div`
-  width: 100%;
-  height: 100%;
-
-  display: grid;
-  grid-template-columns: 265px auto;
-  grid-template-rows: 60px auto;
-  grid-template-areas:
-    'menu header'
-    'menu content'
-    'menu content';
-`;
-
-export const SideMenu = styled.div`
-  grid-area: menu;
-
-  > div#side-menu-header {
-    height: 60px;
-    background-color: #1a1a27;
-  }
-
-  > div#side-menu-content {
-    height: calc(100% - 60px);
-    background-color: #1e1e2d;
-  }
-`;
-
-export const Header = styled.div`
-  grid-area: header;
-  background: #fff;
-`;
-
-export const SubHeader = styled.div`
   width: 100%;
   height: 78px;
 
@@ -80,17 +47,4 @@ export const SubHeader = styled.div`
       }
     }
   }
-`;
-
-export const Main = styled.div`
-  grid-area: content;
-`;
-
-export const ContentScroll = styled(Scrollbars)`
-  height: 100%;
-`;
-
-export const Footer = styled.div`
-  width: 100%;
-  height: 65px;
 `;
