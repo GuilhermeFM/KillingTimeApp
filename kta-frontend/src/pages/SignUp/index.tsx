@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useState } from 'react';
-import { useSpring, ReactSpringHook, useChain } from 'react-spring';
+import { useSpring, useChain, SpringHandle } from 'react-spring';
 import { useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
@@ -23,8 +23,8 @@ const SignUp: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
-  const cancelButtonSpringRef = useRef<ReactSpringHook>({} as ReactSpringHook);
-  const signUpButtonSpringRef = useRef<ReactSpringHook>({} as ReactSpringHook);
+  const cancelButtonSpringRef = useRef<SpringHandle>({} as SpringHandle);
+  const signUpButtonSpringRef = useRef<SpringHandle>({} as SpringHandle);
 
   const cancelButtonSprings = useSpring({
     opacity: loading ? 0 : 1,

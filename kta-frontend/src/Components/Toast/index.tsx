@@ -13,10 +13,7 @@ export interface IToastMessage {
   content?: string;
 }
 
-const Content: React.FC<{ style: object; message: IToastMessage }> = ({
-  style,
-  message,
-}) => {
+const Content: React.FC<{ style: object; message: IToastMessage }> = ({ style, message }) => {
   const { removeToast } = useToast();
 
   useEffect(() => {
@@ -38,20 +35,17 @@ const Content: React.FC<{ style: object; message: IToastMessage }> = ({
 };
 
 const Container: React.FC<{ messages: IToastMessage[] }> = ({ messages }) => {
-  const messagesWithTransitions = useTransition(
-    messages,
-    message => message.id,
-    {
-      from: { right: '-120%', opacity: '0' },
-      enter: { right: '0%', opacity: '1' },
-      leave: { right: '-120%', opacity: '0' },
-    },
-  );
+  const transition = useTransition(messages, {
+    key: message => message.id,
+    from: { right: '-120%', opacity: '0' },
+    enter: { right: '0%', opacity: '1' },
+    leave: { right: '-120%', opacity: '0' },
+  });
 
   return (
     <ToastContainer>
-      {messagesWithTransitions.map(({ key, item, props }) => (
-        <Content key={key} message={item} style={props} />
+      {transition((style, item) => (
+        <Content message={item} style={style} />
       ))}
     </ToastContainer>
   );

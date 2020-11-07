@@ -1,30 +1,88 @@
-import React, { useCallback, useState } from 'react';
-import { useSpring, animated } from 'react-spring';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
+import { useSpring, useTransition, animated } from 'react-spring';
 
 import logoLight from '../../../../assets/logo-light.png';
-import angleDoubleLeft from '../../../../assets/angle-double-left.svg';
 
 import {
   Container,
-  SideMenuItem,
-  SideMenuSection,
   ContentScroll,
+  SideMenuItemContainer,
+  SideMenuSection,
 } from './styles';
 
-const SideMenu: React.FC = () => {
-  const [expanded, setExpanded] = useState(false);
+interface ISideMenuItem {
+  description?: string;
+  isSection?: boolean;
+  selected?: boolean;
+  expanded?: boolean;
+  style?: object;
+  depth?: number;
+  icon?: string;
+  id: number;
 
-  const handleExpand = useCallback(e => {
-    e.preventDefault();
-    setExpanded(prevState => !prevState);
-  }, []);
+  subItems?: ISideMenuItem[];
+  onClick?(e: React.SyntheticEvent): void;
+}
 
-  const expandSprings = useSpring({
-    transform: `rotate(${expanded ? 90 : 0}deg)`,
-    config: {
-      duration: 200,
+interface SideMenuProps {
+  items: ISideMenuItem[];
+}
+
+const SideMenu: React.FC<SideMenuProps> = ({ items }) => {
+  const menuItemRef = useRef<ISideMenuItem[]>([]);
+  const [flattedMenuItem, setFlattedMenuItem] = useState<ISideMenuItem[]>([]);
+
+  const transitions = useTransition(flattedMenuItem, {
+    key: item => item.id,
+    enter: item => async next => {
+      await next({ height: item.isSection ? 20 : 48 });
+      await next({ opacity: 1 });
     },
+    leave: () => async next => {
+      await next({ opacity: 0 });
+      await next({ height: 0 });
+    },
+
+    from: { opacity: 0, height: 0 },
+    config: { duration: 250 },
   });
+
+  const flattenNodes = useCallback(
+    (nodes: ISideMenuItem[], flatted: ISideMenuItem[] = []): void => {
+      for (let idx = 0; idx < nodes.length; idx += 1) {
+        const node = nodes[idx];
+
+        flatted.push({
+          ...node,
+          onClick: e => {
+            e.preventDefault();
+
+            if (!node.subItems) {
+              // navigate
+            } else {
+              node.expanded = !node.expanded;
+
+              const flattedMenuItems: ISideMenuItem[] = [];
+              flattenNodes(menuItemRef.current, flattedMenuItems);
+              setFlattedMenuItem(flattedMenuItems);
+            }
+          },
+        });
+
+        if (!node.expanded) continue;
+        if (node.subItems) flattenNodes(node.subItems, flatted);
+      }
+    },
+    [],
+  );
+
+  useEffect(() => {
+    menuItemRef.current = items;
+
+    const flattedMenuItems: ISideMenuItem[] = [];
+    flattenNodes(menuItemRef.current, flattedMenuItems);
+    setFlattedMenuItem(flattedMenuItems);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Container>
@@ -52,25 +110,62 @@ const SideMenu: React.FC = () => {
       <div id="side-menu-content">
         <ContentScroll>
           <ul>
-            <SideMenuItem>
-              <a href="/#" onClick={handleExpand}>
-                <i id="left-icon" className="flaticon2-architecture-and-city" />
-                <span>Dashboard</span>
-                <animated.i
-                  id="right-icon"
-                  className="flaticon2-next"
-                  style={expandSprings}
-                />
-              </a>
-            </SideMenuItem>
-            <SideMenuSection>
-              <h4>custom</h4>
-              <i className="menu-icon ki ki-bold-more-hor icon-md" />
-            </SideMenuSection>
+            {transitions((style, item) => (
+              <SideMenuItem {...item} style={style} />
+            ))}
           </ul>
         </ContentScroll>
       </div>
     </Container>
+  );
+};
+
+type SideMenuItemProps = ISideMenuItem;
+
+const SideMenuItem: React.FC<SideMenuItemProps> = ({
+  description,
+  isSection,
+  selected,
+  expanded,
+  style,
+  depth,
+  icon,
+  subItems,
+  onClick,
+}) => {
+  const arrowSprings = useSpring({
+    transform: `rotate(${expanded ? 90 : 0}deg)`,
+    config: { duration: 200 },
+  });
+
+  return (
+    <>
+      {isSection ? (
+        <SideMenuSection style={style}>
+          <h4>{description}</h4>
+        </SideMenuSection>
+      ) : (
+        <SideMenuItemContainer depth={depth} style={style} selected={selected}>
+          <a href="/#" onClick={onClick}>
+            {icon ? (
+              <i id="left-icon" className={icon} />
+            ) : (
+              <i>
+                <span />
+              </i>
+            )}
+            <span>{description}</span>
+            {!!subItems && (
+              <animated.i
+                id="right-icon"
+                className="flaticon2-next"
+                style={arrowSprings}
+              />
+            )}
+          </a>
+        </SideMenuItemContainer>
+      )}
+    </>
   );
 };
 

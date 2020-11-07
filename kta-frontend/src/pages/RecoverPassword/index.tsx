@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback } from 'react';
-import { useSpring, ReactSpringHook, useChain } from 'react-spring';
+import { useSpring, useChain, SpringHandle } from 'react-spring';
 import { Link, useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
@@ -19,8 +19,8 @@ const RecoverPassword: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
-  const cancelButtonSpringRef = useRef<ReactSpringHook>({} as ReactSpringHook);
-  const requestButtonSpringRef = useRef<ReactSpringHook>({} as ReactSpringHook);
+  const cancelButtonSpringRef = useRef<SpringHandle>({} as SpringHandle);
+  const requestButtonSpringRef = useRef<SpringHandle>({} as SpringHandle);
 
   const cancelButtonSprings = useSpring({
     opacity: loading ? 0 : 1,
