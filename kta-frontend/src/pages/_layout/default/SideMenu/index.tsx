@@ -82,7 +82,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ items }) => {
     const flattedMenuItems: ISideMenuItem[] = [];
     flattenNodes(menuItemRef.current, flattedMenuItems);
     setFlattedMenuItem(flattedMenuItems);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [flattenNodes, items]);
 
   return (
     <Container>

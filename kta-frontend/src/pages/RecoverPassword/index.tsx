@@ -84,7 +84,7 @@ const RecoverPassword: React.FC = () => {
           <ButtonRequestPassword
             type="submit"
             loading={loading}
-            style={requestButtonSprings}
+            style={requestButtonSprings as any}
             disabled={loading}
           >
             Request
@@ -93,7 +93,7 @@ const RecoverPassword: React.FC = () => {
           <ButtonCancel
             type="button"
             onClick={() => history.push('/')}
-            style={cancelButtonSprings}
+            style={cancelButtonSprings as any}
           >
             Cancel
           </ButtonCancel>

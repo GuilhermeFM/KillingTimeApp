@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useState } from 'react';
-import { useSpring, useChain, SpringHandle } from 'react-spring';
+import { useSpring, useChain } from 'react-spring';
 import { useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
@@ -23,19 +23,18 @@ const SignUp: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
-  const cancelButtonSpringRef = useRef<SpringHandle>({} as SpringHandle);
-  const signUpButtonSpringRef = useRef<SpringHandle>({} as SpringHandle);
+  const cancelButtonSpringRef = useRef({} as never);
+  const signUpButtonSpringRef = useRef({} as never);
 
   const cancelButtonSprings = useSpring({
-    opacity: loading ? 0 : 1,
-    display: loading ? 'none' : 'initial',
-    config: { duration: 10 },
+    to: { opacity: loading ? 0 : 1, display: loading ? 'none' : 'initial' },
+    config: { duration: 50 },
     ref: cancelButtonSpringRef,
   });
 
   const signUpButtonSprings = useSpring({
-    width: loading ? '100%' : '45%',
-    config: { duration: 10 },
+    to: { width: loading ? '100%' : '45%' },
+    config: { duration: 50 },
     ref: signUpButtonSpringRef,
   });
 
@@ -43,7 +42,7 @@ const SignUp: React.FC = () => {
     ? [cancelButtonSpringRef, signUpButtonSpringRef]
     : [signUpButtonSpringRef, cancelButtonSpringRef];
 
-  useChain(chainRefs);
+  useChain(chainRefs as never, loading ? [0, 0] : [0, 0.25]);
 
   const handleSubmit = useCallback(
     async data => {
@@ -100,7 +99,7 @@ const SignUp: React.FC = () => {
           <ButtonSignUp
             type="submit"
             loading={loading}
-            style={signUpButtonSprings}
+            style={signUpButtonSprings as never}
             disabled={loading}
           >
             Sign Up
@@ -108,7 +107,7 @@ const SignUp: React.FC = () => {
           <ButtonCancel
             type="button"
             onClick={() => history.push('/')}
-            style={cancelButtonSprings}
+            style={cancelButtonSprings as never}
           >
             Cancel
           </ButtonCancel>
