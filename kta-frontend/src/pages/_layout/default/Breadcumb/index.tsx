@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Container } from './styles';
 
-const SubHeader: React.FC = () => {
+const Breadcumb: React.FC = () => {
   return (
     <Container>
       <h5>Tabbed Subheader</h5>
@@ -18,4 +18,4 @@ const SubHeader: React.FC = () => {
   );
 };
 
-export default SubHeader;
+export default Breadcumb;

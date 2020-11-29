@@ -1,8 +1,8 @@
 import React from 'react';
-import { v4 } from 'uuid';
 
 import SideMenu from './SideMenu';
-import SubHeader from './SubHeader';
+import Breadcumb from './Breadcumb';
+import * as HeaderItem from './HeaderItem';
 
 import { ContentScroll, Container } from './styles';
 
@@ -151,10 +151,13 @@ const Default: React.FC = ({ children }) => {
           ]}
         />
       </div>
-      <div id="header">Header</div>
+      <div id="header">
+        <HeaderItem.HeaderSearchItem />
+        <HeaderItem.HeaderProfileItem />
+      </div>
       <div id="main">
         <ContentScroll>
-          <SubHeader />
+          <Breadcumb />
           {children}
           <div id="footer">Footer</div>
         </ContentScroll>

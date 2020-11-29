@@ -19,6 +19,14 @@ export const Container = styled.div`
 
   div#header {
     grid-area: header;
+    background-color: #fff;
+
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: flex-end;
+
+    padding: 0px 25px;
   }
 
   div#main {

@@ -38,11 +38,12 @@ const SignUp: React.FC = () => {
     ref: signUpButtonSpringRef,
   });
 
-  const chainRefs = loading
-    ? [cancelButtonSpringRef, signUpButtonSpringRef]
-    : [signUpButtonSpringRef, cancelButtonSpringRef];
-
-  useChain(chainRefs as never, loading ? [0, 0] : [0, 0.25]);
+  useChain(
+    loading
+      ? ([cancelButtonSpringRef, signUpButtonSpringRef] as never)
+      : ([signUpButtonSpringRef, cancelButtonSpringRef] as never),
+    loading ? [0, 0] : [0, 0.25],
+  );
 
   const handleSubmit = useCallback(
     async data => {
