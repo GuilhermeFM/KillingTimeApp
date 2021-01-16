@@ -7,8 +7,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ loading, children, ...rest }) => {
-  return <Container {...rest}>{loading ? <Loading /> : children}</Container>;
+const Button: React.FC<ButtonProps> = ({ loading, children, style, ...rest }) => {
+  return <Container style={style as never} {...rest}>{loading ? <Loading /> : children}</Container>;
 };
 
 export default Button;

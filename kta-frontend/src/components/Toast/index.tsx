@@ -38,20 +38,19 @@ const Content: React.FC<{ style: object; message: IToastMessage }> = ({
 };
 
 const Container: React.FC<{ messages: IToastMessage[] }> = ({ messages }) => {
-  const messagesWithTransitions = useTransition(
-    messages,
-    message => message.id,
-    {
-      from: { right: '-120%', opacity: '0' },
-      enter: { right: '0%', opacity: '1' },
-      leave: { right: '-120%', opacity: '0' },
-    },
-  );
+
+  const transitions = useTransition(messages, {
+    key: item => item.id,
+    from: { right: '-120%', opacity: '0' },
+    enter: { right: '0%', opacity: '1' },
+    leave: { right: '-120%', opacity: '0' },
+    config: { duration: 250 },
+  });
 
   return (
     <ToastContainer>
-      {messagesWithTransitions.map(({ key, item, props }) => (
-        <Content key={key} message={item} style={props} />
+      {transitions((style, item) => (
+        <Content message={item} style={style} />
       ))}
     </ToastContainer>
   );

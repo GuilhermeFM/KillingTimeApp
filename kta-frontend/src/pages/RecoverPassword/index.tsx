@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback } from 'react';
-import { useSpring, ReactSpringHook, useChain } from 'react-spring';
+import { useSpring, useChain } from 'react-spring';
 import { Link, useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
@@ -19,27 +19,27 @@ const RecoverPassword: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
-  const cancelButtonSpringRef = useRef<ReactSpringHook>({} as ReactSpringHook);
-  const requestButtonSpringRef = useRef<ReactSpringHook>({} as ReactSpringHook);
+  const cancelButtonSpringRef = useRef({});
+  const requestButtonSpringRef = useRef({});
 
   const cancelButtonSprings = useSpring({
     opacity: loading ? 0 : 1,
     display: loading ? 'none' : 'initial',
     config: { duration: 10 },
-    ref: cancelButtonSpringRef,
+    ref: cancelButtonSpringRef as never,
   });
 
   const requestButtonSprings = useSpring({
     width: loading ? '100%' : '45%',
     config: { duration: 10 },
-    ref: requestButtonSpringRef,
+    ref: requestButtonSpringRef as never,
   });
 
   const chainRefs = loading
     ? [cancelButtonSpringRef, requestButtonSpringRef]
     : [requestButtonSpringRef, cancelButtonSpringRef];
 
-  useChain(chainRefs);
+  useChain(chainRefs as never, loading ? [0, 0] : [0, 0.25]);
 
   const handleSubmit = useCallback(
     async data => {
@@ -84,7 +84,7 @@ const RecoverPassword: React.FC = () => {
           <ButtonRequestPassword
             type="submit"
             loading={loading}
-            style={requestButtonSprings}
+            style={requestButtonSprings as never}
             disabled={loading}
           >
             Request
@@ -93,7 +93,7 @@ const RecoverPassword: React.FC = () => {
           <ButtonCancel
             type="button"
             onClick={() => history.push('/')}
-            style={cancelButtonSprings}
+            style={cancelButtonSprings as never}
           >
             Cancel
           </ButtonCancel>
