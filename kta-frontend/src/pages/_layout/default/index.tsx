@@ -17,6 +17,7 @@ const Default: React.FC = ({ children }) => {
               depth: 0,
               description: 'Dashboard',
               icon: 'flaticon2-architecture-and-city',
+              url: '/Dashboard',
             },
             {
               id: 2,

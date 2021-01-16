@@ -1,10 +1,12 @@
 import React from 'react';
+
 import {
   Route as ReactRouterRoute,
   RouteProps as ReactRouterDomProps,
+  Redirect,
 } from 'react-router-dom';
 
-import Layout from '../pages/_layout/default';
+import { useAuth } from '../hooks/auth';
 
 interface RouteProps extends ReactRouterDomProps {
   component: React.ComponentType;
@@ -16,19 +18,9 @@ const Route: React.FC<RouteProps> = ({
   path,
   isPrivate,
 }) => {
-  if (isPrivate) {
-    return (
-      <ReactRouterRoute
-        path={path}
-        render={() => (
-          <Layout>
-            <Component />
-          </Layout>
-        )}
-      />
-    );
-  }
-
+  const { token } = useAuth();
+  if (isPrivate && !token) return <Redirect to="/" />;
+  if (!isPrivate && token) return <Redirect to="/Dashboard" />;
   return <ReactRouterRoute path={path} render={() => <Component />} />;
 };
 

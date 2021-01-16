@@ -1,5 +1,5 @@
 import React, { useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
 import validate from '../../validations/SignIn';
@@ -11,6 +11,7 @@ import logo from '../../assets/logo-2.png';
 import { Container, Form, Input, Button, Checkbox } from './styles';
 
 const SignIn: React.FC = () => {
+  const { replace } = useHistory();
   const { signIn } = useAuth();
   const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
@@ -27,6 +28,7 @@ const SignIn: React.FC = () => {
       if (!errors) {
         try {
           await signIn(email, password, rememberMe);
+          replace('/Dashboard');
         } catch (err) {
           if (err instanceof IAPIError) {
             addToast({
@@ -43,7 +45,7 @@ const SignIn: React.FC = () => {
         }
       }
     },
-    [addToast, signIn],
+    [addToast, replace, signIn],
   );
 
   return (

@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { useSpring, useTransition, animated } from 'react-spring';
+import { useHistory } from 'react-router-dom';
 
 import logoLight from '../../../../assets/logo-light.png';
 
@@ -18,6 +19,7 @@ interface ISideMenuItem {
   style?: object;
   depth?: number;
   icon?: string;
+  url?: string;
   id: number;
 
   subItems?: ISideMenuItem[];
@@ -29,6 +31,7 @@ interface SideMenuProps {
 }
 
 const SideMenu: React.FC<SideMenuProps> = ({ items }) => {
+  const { push } = useHistory();
   const menuItemRef = useRef<ISideMenuItem[]>([]);
   const [flattedMenuItem, setFlattedMenuItem] = useState<ISideMenuItem[]>([]);
 
@@ -58,7 +61,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ items }) => {
             e.preventDefault();
 
             if (!node.subItems) {
-              // navigate
+              node.url && push(node.url);
             } else {
               node.expanded = !node.expanded;
 
