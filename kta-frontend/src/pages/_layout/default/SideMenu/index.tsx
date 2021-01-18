@@ -76,7 +76,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ items }) => {
         if (node.subItems) flattenNodes(node.subItems, flatted);
       }
     },
-    [],
+    [push],
   );
 
   useEffect(() => {
