@@ -20,7 +20,7 @@ const Route: React.FC<RouteProps> = ({
 }) => {
   const { token } = useAuth();
   if (isPrivate && !token) return <Redirect to="/" />;
-  if (!isPrivate && token) return <Redirect to="/Dashboard" />;
+  if (!isPrivate && token) return <Redirect to="/Home" />;
   return <ReactRouterRoute path={path} render={() => <Component />} />;
 };
 

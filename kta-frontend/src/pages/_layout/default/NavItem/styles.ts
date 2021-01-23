@@ -1,62 +1,11 @@
 import styled, { css } from 'styled-components';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { animated } from 'react-spring';
 
-export const ContentScroll = styled(Scrollbars)`
-  height: 100%;
-`;
-
-export const Container = styled.div`
-  height: 100%;
-
-  > div#side-menu-header {
-    height: 65px;
-    background-color: #1a1a27;
-
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 25px;
-
-    > img:first-child {
-      align-self: center;
-    }
-
-    > svg {
-      height: 27px;
-      width: 27px;
-
-      > g [fill] {
-        transition: fill 0.3s ease;
-        fill: #494b74;
-      }
-
-      :hover {
-        > g [fill] {
-          fill: #3699ff;
-        }
-      }
-    }
-  }
-
-  > div#side-menu-content {
-    height: calc(100% - 65px);
-    background-color: #1e1e2d;
-  }
-
-  ul {
-    padding: 28px 0;
-  }
-`;
-
-interface ContainerProps {
+interface NavItemProps {
   depth?: number;
   selected?: boolean;
 }
 
-export const SideMenuItemContainer = styled(animated.li)<ContainerProps>`
+export const NavItem = styled.li<NavItemProps>`
   height: 48px;
 
   display: flex;
@@ -80,7 +29,7 @@ export const SideMenuItemContainer = styled(animated.li)<ContainerProps>`
       justify-content: center;
 
       color: #494b74;
-      font-size: 17px;
+      font-size: 20px;
       margin-right: 20px;
 
       > span {
@@ -143,17 +92,4 @@ export const SideMenuItemContainer = styled(animated.li)<ContainerProps>`
             }
           }
         `}
-`;
-
-export const SideMenuSection = styled(animated.li)`
-  padding: 0 25px;
-  margin-top: 20px;
-  margin-bottom: 15px;
-
-  > h4 {
-    font-size: 12px;
-    font-weight: 500;
-    color: #4c4e6f;
-    text-transform: uppercase;
-  }
 `;

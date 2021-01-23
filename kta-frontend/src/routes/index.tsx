@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route as ReactRouterRoute } from 'react-router-dom';
+import { Switch, Redirect, Route as ReactRouterRoute } from 'react-router-dom';
 
 import Route from './Route';
 
@@ -10,7 +10,8 @@ import ResetPassword from '../pages/ResetPassword';
 import ConfirmEmail from '../pages/ConfirmEmail';
 
 import Layout from '../pages/_layout/default';
-import Dashboard from '../pages/Dashboard';
+import Home from '../pages/Home';
+import Error from '../pages/Error';
 
 export const Routes: React.FC = () => {
   return (
@@ -20,11 +21,13 @@ export const Routes: React.FC = () => {
       <Route path="/RecoverPassword" component={RecoverPassword} />
       <Route path="/ResetPassword" component={ResetPassword} />
       <Route path="/ConfirmEmail" component={ConfirmEmail} />
+      <ReactRouterRoute path="/404" component={Error} />
 
       <ReactRouterRoute>
         <Layout>
           <Switch>
-            <Route path="/Dashboard" component={Dashboard} isPrivate />
+            <Route path="/Home" component={Home} isPrivate />
+            <Redirect to="/404" />
           </Switch>
         </Layout>
       </ReactRouterRoute>

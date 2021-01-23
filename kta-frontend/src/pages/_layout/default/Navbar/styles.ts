@@ -1,0 +1,48 @@
+import styled from 'styled-components';
+import { Scrollbars } from 'react-custom-scrollbars';
+
+export const ContentScroll = styled(Scrollbars)`
+  height: calc(100% - 65px) !important;
+`;
+
+export const Navbar = styled.nav`
+  height: 100%;
+
+  background-color: #1e1e2d;
+
+  ul {
+    padding: 28px 0;
+  }
+`;
+
+export const NavbarHeader = styled.div`
+  height: 65px;
+  background-color: #1a1a27;
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 25px;
+
+  > img:first-child {
+    align-self: center;
+  }
+
+  > svg {
+    height: 27px;
+    width: 27px;
+
+    > g [fill] {
+      transition: fill 0.3s ease;
+      fill: #494b74;
+    }
+
+    :hover {
+      > g [fill] {
+        fill: #3699ff;
+      }
+    }
+  }
+`;
