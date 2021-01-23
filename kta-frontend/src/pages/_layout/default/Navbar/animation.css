@@ -1,0 +1,30 @@
+/* CSSTransition classes  */
+.primary-enter {
+  position: absolute;
+  transform: translateX(-110%);
+}
+.primary-enter-active {
+  transform: translateX(0%);
+  transition: all 0.2s ease;
+}
+.primary-exit {
+  position: absolute;
+}
+.primary-exit-active {
+  transform: translateX(-110%);
+  transition: all 0.2s ease;
+}
+
+.secondary-enter {
+  transform: translateX(110%);
+}
+.secondary-enter-active {
+  transform: translateX(0%);
+  transition: all 0.2s ease;
+}
+.secondary-exit {
+}
+.secondary-exit-active {
+  transform: translateX(110%);
+  transition: all 0.2s ease;
+}

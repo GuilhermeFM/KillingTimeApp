@@ -12,8 +12,9 @@ import { Container, Form, Input, Button, Checkbox } from './styles';
 
 const SignIn: React.FC = () => {
   const { replace } = useHistory();
-  const { signIn } = useAuth();
   const { addToast } = useToast();
+  const { signIn } = useAuth();
+
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = useCallback(
@@ -28,7 +29,7 @@ const SignIn: React.FC = () => {
       if (!errors) {
         try {
           await signIn(email, password, rememberMe);
-          replace('/Dashboard');
+          replace('/Home');
         } catch (err) {
           if (err instanceof IAPIError) {
             addToast({
